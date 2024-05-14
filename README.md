@@ -158,7 +158,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/users
+  * URL: /api/signup
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1028,7 +1028,7 @@ Return all the bookings for a spot specified by id.
 * Require Authentication: true
 * Request
   * Method: GET
-  * URL: /api/users/spots/bookings/:spotId
+  * URL: /api/spots/:spotId/bookings
   * Body: none
 
 * Successful Response: If you ARE NOT the owner of the spot.
@@ -1318,7 +1318,7 @@ Delete an existing image for a Spot.
 * Require proper authorization: Spot must belong to the current user
 * Request
   * Method: DELETE
-  * URL: /api/users/spots/spotimages/:spotId
+  * URL: /api/spots/:spotId/spotimages/:spotimageId
   * Body: none
 
 * Successful Response
