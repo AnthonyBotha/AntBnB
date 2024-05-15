@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![MY DB SCHEMA](AntBnB.png)
+![MY DB SCHEMA](/images/AntBnB.png)
 
 
 ## API Documentation
