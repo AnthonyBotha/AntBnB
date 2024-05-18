@@ -26,10 +26,7 @@ const router = express.Router();
 
 
   // Log in
-router.post(
-  '/',
-  validateLogin,
-  async (req, res, next) => {
+router.post('/', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
 
     const user = await User.unscoped().findOne({
@@ -53,6 +50,8 @@ router.post(
       id: user.id,
       email: user.email,
       username: user.username,
+      firstname: user.firstname,
+      lastname: user.lastname
     };
 
     await setTokenCookie(res, safeUser);
@@ -66,9 +65,7 @@ router.post(
 
 
   // Log out
-router.delete(
-    '/',
-    (_req, res) => {
+router.delete('/', (_req, res) => {
       res.clearCookie('token');
       return res.json({ message: 'success' });
     }
@@ -76,9 +73,7 @@ router.delete(
 
 
   // Restore session user
-router.get(
-    '/',
-    (req, res) => {
+router.get('/', (req, res) => {
       const { user } = req;
       if (user) {
         const safeUser = {
