@@ -17,16 +17,17 @@ const router = express.Router();
     check('credential')
       .exists({ checkFalsy: true })
       .notEmpty()
-      .withMessage('Please provide a valid email or username.'),
+      .withMessage('Email or username is required'),
     check('password')
       .exists({ checkFalsy: true })
-      .withMessage('Please provide a password.'),
+      .withMessage('Password is required'),
     handleValidationErrors
   ];
 
 
   // Log in
 router.post('/', validateLogin, async (req, res, next) => {
+  try{
     const { credential, password } = req.body;
 
     const user = await User.unscoped().findOne({
@@ -39,7 +40,7 @@ router.post('/', validateLogin, async (req, res, next) => {
     });
 
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
+      const err = new Error('Invalid credentials');
       err.status = 401;
       err.title = 'Login failed';
       err.errors = { credential: 'The provided credentials were invalid.' };
@@ -48,19 +49,22 @@ router.post('/', validateLogin, async (req, res, next) => {
 
     const safeUser = {
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       username: user.username,
-      firstname: user.firstname,
-      lastname: user.lastname
     };
 
     await setTokenCookie(res, safeUser);
 
     return res.json({
       user: safeUser
-    });
+    });  
+  } catch (e){
+      console.log(e);
   }
-);
+    
+});
 
 
 
@@ -78,8 +82,8 @@ router.get('/', (req, res) => {
       if (user) {
         const safeUser = {
           id: user.id,
-          firstname: user.firstname,
-          lastname: user.lastname,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
           username: user.username,
         };
@@ -90,6 +94,20 @@ router.get('/', (req, res) => {
     }
   );
 
+  //Get the Current User
+  router.get("/", async (req, res) => {
+    try{
+      const {id} = req.user;
+    
+      const user = await User.findByPk(id);
+  
+      return res.json({user});
+
+    } catch (e){
+        console.log(e);
+    }
+
+  });
 
   
 

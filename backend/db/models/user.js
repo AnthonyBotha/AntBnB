@@ -9,7 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Spot,{
+        foreignKey: "ownerId"
+      })
+      User.hasMany(models.Booking,{
+        foreignKey: "userId"
+      })
+      User.hasMany(models.Review,{
+        foreignKey: "userId"
+      })
     }
   }
   User.init({
@@ -26,14 +34,16 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    firstname: {
+    firstName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         len: [3, 256],
       }
     },
-    lastname: {
+    lastName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         len: [3, 256],
       }
@@ -60,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
     defaultScope: {
       attributes: {
-        exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
+        exclude: ["hashedPassword", "createdAt", "updatedAt"]
       }
     }
   });
