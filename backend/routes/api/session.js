@@ -27,7 +27,6 @@ const router = express.Router();
 
   // Log in
 router.post('/', validateLogin, async (req, res, next) => {
-  try{
     const { credential, password } = req.body;
 
     const user = await User.unscoped().findOne({
@@ -60,9 +59,6 @@ router.post('/', validateLogin, async (req, res, next) => {
     return res.json({
       user: safeUser
     });  
-  } catch (e){
-      console.log(e);
-  }
     
 });
 
@@ -96,17 +92,11 @@ router.get('/', (req, res) => {
 
   //Get the Current User
   router.get("/", async (req, res) => {
-    try{
       const {id} = req.user;
     
       const user = await User.findByPk(id);
   
       return res.json({user});
-
-    } catch (e){
-        console.log(e);
-    }
-
   });
 
   

@@ -96,7 +96,8 @@ router.post("/", requireAuth, async (req, res) => {
         description: description,
         price: price
     });
-
+    
+    res.status(201);
     return res.json(newSpot);
 });
 
