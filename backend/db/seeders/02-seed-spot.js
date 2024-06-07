@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 
 
 let options = {};
-options.tableName = "Spots";
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in the options object
 }
@@ -25,6 +24,7 @@ module.exports = {
     */
    await Spot.bulkCreate([
     {
+      id: 1,
       ownerId: 1,
       address: "123 Street Ave",
       city: "Los Angeles",
@@ -37,6 +37,7 @@ module.exports = {
       price: 234.43
     },
     {
+      id: 2,
       ownerId: 2,
       address: "52 Long Ave",
       city: "Salt Lake City",
@@ -49,6 +50,7 @@ module.exports = {
       price: 500.10
     },
     {
+      id: 3,
       ownerId: 3,
       address: "03 Washington Ave",
       city: "Boulder",
@@ -72,6 +74,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     options.tableName = "Spots";
-    await queryInterface.bulkDelete(options,null,{});
+    await queryInterface.bulkDelete(options,{
+      id: { [Op.in]: [1, 2, 3] }
+    },{});
   }
 };
