@@ -1,7 +1,7 @@
 'use strict';
 
 const { Spot } = require("../models");
-const bcrypt = require("bcryptjs");
+
 
 
 let options = {};
@@ -43,7 +43,7 @@ module.exports = {
       city: "Salt Lake City",
       state: "Utah",
       country: "United States",
-      lat: 235.22,
+      lat: 50,
       lng: 2345.213,
       name: "Snow Paradise",
       description: "Great destination for a ski trip",
@@ -56,7 +56,7 @@ module.exports = {
       city: "Boulder",
       state: "Colorado",
       country: "United States",
-      lat: 345.21,
+      lat: 25,
       lng: 9021.23,
       name: "Mountain Cabin",
       description: "Several hiking trails to choose from",
