@@ -24,18 +24,21 @@ module.exports = {
     */
        await Booking.bulkCreate([
         {
+          id: 1,
           spotId: 3,
           userId: 2,
           startDate: new Date("2024-03-02"),
           endDate: new Date("2024-07-14")
         },
         {
+          id: 2,
           spotId: 2,
           userId: 3,
           startDate: new Date("2024-12-16"),
           endDate: new Date("2025-01-03")
         },
         {
+          id: 3,
           spotId: 1,
           userId: 1,
           startDate: new Date("2025-03-02"),
@@ -52,6 +55,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     options.tableName = "Bookings";
-    await queryInterface.bulkDelete(options,null,{});
+    await queryInterface.bulkDelete(options, {
+      id: { [Op.in]: [1, 2, 3] }
+    } ,{});
   }
 };

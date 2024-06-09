@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Review.belongsTo(models.Spot,{
-        foreignKey: "spotId"
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+        hooks: true
       })
 
       Review.hasMany(models.ReviewImage,{
@@ -34,15 +36,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     review: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate:{
-        min: 1,
-        max: 5
-      }
+      allowNull: false
     },
     stars: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 5
+      }
     }
   }, {
     sequelize,

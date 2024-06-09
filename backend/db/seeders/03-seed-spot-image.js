@@ -23,16 +23,19 @@ module.exports = {
     */
         await SpotImage.bulkCreate([
           {
+            id: 1,
             url: "www.spotimageurlone",
             preview: true,
             spotId: 2
           },
           {
+            id: 2,
             url: "www.spotimageurltwo",
             preview: false,
             spotId: 1
           },
           {
+            id: 3,
             url: "www.spotimageurlthree",
             preview: true,
             spotId: 3
@@ -48,6 +51,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     options.tableName = "SpotImages";
-    await queryInterface.bulkDelete(options,null,{});
+    await queryInterface.bulkDelete(options,{
+      id: { [Op.in]: [1, 2, 3] }
+    },{});
   }
 };

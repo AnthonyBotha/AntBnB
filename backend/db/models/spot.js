@@ -16,15 +16,21 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Spot.hasMany(models.SpotImage,{
-        foreignKey: "spotId"
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+        hooks: true
       })
 
       Spot.hasMany(models.Booking,{
-        foreignKey: "spotId"
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+        hooks: true
       })
 
       Spot.hasMany(models.Review,{
-        foreignKey: "spotId"
+        foreignKey: "spotId",
+        onDelete: "CASCADE",
+        hooks: true
       })
     }
   }
@@ -60,13 +66,18 @@ module.exports = (sequelize, DataTypes) => {
     lng: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-      // validate: {
-      //   max
-      // }
+      validate: {
+        min: -180,
+        max: 180
+      }
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [1, 50]
+
+      }
     },
     description: {
       type: DataTypes.STRING,
@@ -74,7 +85,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     price: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 1
+      }
     }
   }, {
     sequelize,

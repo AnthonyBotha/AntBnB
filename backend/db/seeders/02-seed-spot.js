@@ -31,7 +31,7 @@ module.exports = {
       state: "California",
       country: "United States",
       lat: 23.432,
-      lng: 434.2345,
+      lng: 124.54,
       name: "Anthony's Pad",
       description: "Great place!",
       price: 234.43
@@ -44,7 +44,7 @@ module.exports = {
       state: "Utah",
       country: "United States",
       lat: 50,
-      lng: 2345.213,
+      lng: -26.45,
       name: "Snow Paradise",
       description: "Great destination for a ski trip",
       price: 500.10
@@ -57,7 +57,7 @@ module.exports = {
       state: "Colorado",
       country: "United States",
       lat: 25,
-      lng: 9021.23,
+      lng: 79.23,
       name: "Mountain Cabin",
       description: "Several hiking trails to choose from",
       price: 435.23

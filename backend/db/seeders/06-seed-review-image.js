@@ -25,14 +25,17 @@ module.exports = {
     */
         await ReviewImage.bulkCreate([
           {
+            id: 1,
             url: "www.reviewimageurlone",
             reviewId: 1
           },
           {
+            id: 2,
             url: "www.reviewimageurltwo",
             reviewId: 2
           },
           {
+            id: 3,
             url: "www.reviewimageurlthree",
             reviewId: 3
           }
@@ -47,6 +50,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
       options.tableName = "ReviewImages"
-      await queryInterface.bulkDelete(options,null,{});
+      await queryInterface.bulkDelete(options, {
+        id: { [Op.in]: [1, 2, 3] }
+      },{});
   }
 };

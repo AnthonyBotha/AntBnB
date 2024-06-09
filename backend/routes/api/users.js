@@ -88,13 +88,6 @@ router.post('/', validateSignup, async (req, res) => {
 
 
 
-  //Get all Spots owned by the Current User
-  router.get("/:userId/spots", requireAuth, async (req, res) => {
-    const {userId} = req.params;
-    const spots = await Spot.findAll({
-        where: {ownerId: userId}
-    });
-    return res.json(spots);
-});
+
 
 module.exports = router;

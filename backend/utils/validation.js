@@ -25,14 +25,12 @@ const handleValidationErrors = (req, _res, next) => {
       const err = Error("User already exists");
       err.errors = errors;
       err.status = 500;
-      err.title = "User already exists";
       next(err);
 
     } else {
-      const err = Error("Bad request.");
+      const err = Error("Bad request");
       err.errors = errors;
       err.status = 400;
-      err.title = "Bad request.";
       next(err);
     }
 
