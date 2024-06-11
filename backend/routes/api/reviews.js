@@ -61,5 +61,128 @@ router.get("/current", requireAuth, async (req, res) => {
     res.json({Reviews: reviewsWithPreviewImage});
 });
 
+//Add an Image to a Review based on the Review's id
+router.post("/:reviewId/images", requireAuth, async (req, res) => {
+    const {id} = req.user;
+    const {reviewId} = req.params;
+    const {url} = req.body;
+
+    const review = await Review.findByPk(reviewId);
+
+    const reviewImageCount = await ReviewImage.count({
+        where: {reviewId: reviewId}
+    });
+
+    console.log("Review Image Count:", reviewImageCount);
+
+    if (review){
+        if (review.userId === id){
+            if (reviewImageCount < 10){
+                const newImage = await ReviewImage.create({
+                    reviewId: reviewId,
+                    url: url
+                });
+        
+                res.status(201);
+                res.json({
+                    id: newImage.id,
+                    url: url
+                });   
+            } else {
+                res.status(403);
+                res.json({
+                    "message": "Maximum number of images for this resource was reached"
+                });
+            }
+    
+        } else {
+            res.status(403);
+            res.json({
+                "message": "Forbidden"
+            });
+        }
+    } else {
+        res.status(404);
+        res.json({
+            "message": "Review couldn't be found"
+        });
+    }
+});
+
+const validateReview = [
+    check("review")
+        .exists({ checkFalsy: true})
+        .withMessage("Review text is required"),
+    check("stars")
+        .isInt({min: 1, max: 5})
+        .withMessage("Stars must be an integer from 1 to 5"),
+    handleValidationErrors
+]
+
+//Edit a Review
+router.put("/:reviewId", requireAuth, validateReview, async (req, res) => {
+    const {id} = req.user;
+    const {reviewId} = req.params;
+    const {review, stars} = req.body;
+
+
+    const reviewToUpdate = await Review.findByPk(reviewId);
+
+    
+        if (reviewToUpdate){
+            if (id === reviewToUpdate.userId) {
+                reviewToUpdate.update({
+                    review: review,
+                    stars: stars
+                });
+    
+            res.status(200);
+            res.json(reviewToUpdate);
+
+            } else {
+                res.status(403);
+                res.json({
+                    "message": "Forbidden"
+                });
+            }
+
+        } else {
+            res.status(404);
+            res.json({
+                "message": "Review couldn't be found"
+            });
+        }
+});
+
+//Delete a Review (Add On Cascade Delete)
+router.delete("/:reviewId", requireAuth, async (req, res) => {
+    const {id} = req.user;
+    const {reviewId} = req.params;
+
+    const reviewToDelete = await Review.findByPk(reviewId);
+    
+    if (reviewToDelete) {
+        if (id === reviewToDelete.userId){
+            console.log("id: ", id);
+            await reviewToDelete.destroy();
+            console.log("reviewId: ", reviewId);
+            res.json({
+                "message": "Successfully deleted"
+            });
+        } else {
+            res.status(403);
+            res.json({
+                "message": "Forbidden"
+            });
+        }
+    } else {
+        res.status(404);
+        res.json({
+            "message": "Review couldn't be found"
+        });
+    }
+
+});
+
 
 module.exports = router;
