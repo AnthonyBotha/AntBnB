@@ -1,10 +1,11 @@
 const express = require('express');
-const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
+const { Booking, Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
 
 const { handleValidationErrors } = require('../../utils/validation');
+const booking = require('../../db/models/booking');
 
 const router = express.Router();
 
@@ -321,8 +322,6 @@ router.post("/:spotId/reviews", requireAuth, validateReview, async (req, res) =>
                 "message": "User already has a review for this spot"
             });
         }
-
-
     } else {
         res.status(404);
         res.json({
@@ -331,6 +330,61 @@ router.post("/:spotId/reviews", requireAuth, validateReview, async (req, res) =>
     }
 });
 
+const validateBooking = [
+    check("startDate")
+        .custom(value => {
+            const startDate = new Date(value);
+            const currentDate = new Date();
+            if (startDate < currentDate){
+                throw new Error("startDate cannot be in the past")
+            }
+        }),
+    check("endDate")
+        .custom((value, {req}) => {
+            const endDate = new Date(value);
+            const startDate = new Date(req.body.startDate);
+
+            if (endDate <= startDate){
+                throw new Error("endDate cannot be on or before startDate");
+            }
+        }),
+    handleValidationErrors
+]
+
+//Create a Booking from a Spot based on the Spot's id
+router.post("/:spotId/bookings", requireAuth, validateBooking, async (req, res) => {
+    const {id} = req.user;
+    const {spotId} = req.params;
+    const {startDate, endDate} = req.body;
+
+    const spot = await Spot.findByPk(spotId);
+
+    if (spot) {
+        if (spot.ownerId !== id){
+            const newBooking = await Booking.create({
+                spotId: spotId,
+                userId: id,
+                startDate: startDate,
+                endDate: endDate
+            });
+    
+            res.status(201);
+            res.json(newBooking)
+    
+        } else {
+            res.status(403);
+            res.json({
+                "message": "Forbidden"
+            });
+        }
+    } else {
+        res.status(404);
+        res.json({
+            "message": "Spot couldn't be found"
+        });
+    }
+
+});
 
 
 module.exports = router;

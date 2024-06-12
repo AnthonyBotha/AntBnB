@@ -154,7 +154,7 @@ router.put("/:reviewId", requireAuth, validateReview, async (req, res) => {
         }
 });
 
-//Delete a Review (Add On Cascade Delete)
+//Delete a Review 
 router.delete("/:reviewId", requireAuth, async (req, res) => {
     const {id} = req.user;
     const {reviewId} = req.params;
@@ -163,9 +163,7 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
     
     if (reviewToDelete) {
         if (id === reviewToDelete.userId){
-            console.log("id: ", id);
             await reviewToDelete.destroy();
-            console.log("reviewId: ", reviewId);
             res.json({
                 "message": "Successfully deleted"
             });
