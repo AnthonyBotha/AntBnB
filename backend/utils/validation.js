@@ -38,28 +38,28 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
-const checkBookingConflict = (req, res, next) => {
-  const {startDate, endDate} = req.body;
+// const checkBookingConflict = (req, res, next) => {
+//   const {startDate, endDate} = req.body;
 
-  //Check if dates conflict with existing bookings
-  const isConflict = checkForBookingConflict(startDate, endDate);
+//   //Check if dates conflict with existing bookings
+//   const isConflict = checkForBookingConflict(startDate, endDate);
 
-  if (isConflict){
-    res.status(403);
-    res.json({
-      message: "Sorry, this spot is already booked for the specified dates",
-      errors: {
-          startDate: "Start date conflicts with an existing booking",
-          endDate: "End date conflicts with an existing booking"
-      }
-    });
-  }
-  next();
-}
+//   if (isConflict){
+//     res.status(403);
+//     res.json({
+//       message: "Sorry, this spot is already booked for the specified dates",
+//       errors: {
+//           startDate: "Start date conflicts with an existing booking",
+//           endDate: "End date conflicts with an existing booking"
+//       }
+//     });
+//   }
+//   next();
+// }
 
-const checkForBookingConflict = async (startDate, endDate) => {
-  const conflictingBookings = await checkBookingConflict.findAll({})
-}
+// const checkForBookingConflict = async (startDate, endDate) => {
+//   const conflictingBookings = await checkBookingConflict.findAll({})
+// }
 
 module.exports = {
   handleValidationErrors

@@ -1,4 +1,5 @@
 const express = require('express');
+const {Op} = require("sequelize");
 const { Booking, Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
@@ -334,29 +335,79 @@ const validateBooking = [
     check("startDate")
         .custom(value => {
             const startDate = new Date(value);
+            console.log("startDate:", startDate)
             const currentDate = new Date();
+            console.log(currentDate);
+            console.log(startDate < currentDate)
             if (startDate < currentDate){
                 throw new Error("startDate cannot be in the past")
             }
-        }),
+            return true;
+        })
+        .bail(),
     check("endDate")
         .custom((value, {req}) => {
             const endDate = new Date(value);
+            console.log("endDate:",endDate);
             const startDate = new Date(req.body.startDate);
+            console.log("startDate:", startDate);
+
+            console.log(endDate <= startDate);
 
             if (endDate <= startDate){
                 throw new Error("endDate cannot be on or before startDate");
             }
-        }),
+            return true;
+        })
+        .bail(),
     handleValidationErrors
 ]
 
+//Check for booking conflict
+const checkForBookingConflict = async (spotId,startDate, endDate) => {
+    const conflictingBookings = await Booking.findAll({
+        where:{
+            spotId: spotId,
+            [Op.or]: [
+                {startDate: {[Op.between]: [startDate, endDate]}},
+                {endDate: {[Op.between]: [startDate, endDate]}},
+                {[Op.and]: [
+                    {startDate: {[Op.lte]: startDate}},
+                    {endDate: {[Op.gte]: endDate}}
+                ]}
+            ]}
+        });
+
+    return conflictingBookings.length > 0;
+}
+
+const checkBookingConflict = async (req, res, next) => {
+    const {spotId} = req.params;
+    const {startDate, endDate} = req.body;
+
+    const isConflict = await checkForBookingConflict(spotId, new Date(startDate), new Date(endDate));
+
+    if (isConflict){
+        res.status(403);
+        return res.json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "errors": {
+                "startDate": "Start date conflicts with an existing booking",
+                "endDate": "End date conflicts with an existing booking"
+            }
+        });
+    }
+    next();
+}
+
+
 //Create a Booking from a Spot based on the Spot's id
-router.post("/:spotId/bookings", requireAuth, validateBooking, async (req, res) => {
+router.post("/:spotId/bookings", requireAuth, validateBooking, checkBookingConflict, async (req, res) => {
     const {id} = req.user;
     const {spotId} = req.params;
     const {startDate, endDate} = req.body;
 
+  
     const spot = await Spot.findByPk(spotId);
 
     if (spot) {
@@ -367,7 +418,7 @@ router.post("/:spotId/bookings", requireAuth, validateBooking, async (req, res) 
                 startDate: startDate,
                 endDate: endDate
             });
-    
+
             res.status(201);
             res.json(newBooking)
     
