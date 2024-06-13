@@ -10,9 +10,90 @@ const booking = require('../../db/models/booking');
 
 const router = express.Router();
 
-//Get all Spots
-router.get("/", async (req, res) => {
+
+const validateQuery = [
+    check("page")
+        .optional()
+        .isInt({min: 1})
+        .withMessage("Page must be greater than or equal to 1"),
+    check("size")
+        .optional()
+        .isInt({min: 1, max: 20})
+        .withMessage("Size must be between 1 and 20"),
+    check("maxLat")
+        .optional()
+        .isFloat({max: 90})
+        .withMessage("Maximum latitude is invalid"),
+    check("minLat")
+        .optional()
+        .isFloat({min: -90})
+        .withMessage("Minimum latitude is invalid"),
+    check("maxLng")
+        .optional()
+        .isFloat({max: 180})
+        .withMessage("Maximum longitude is invalid"),
+    check("minLng")
+        .optional()
+        .isFloat({min: -180})
+        .withMessage("Minimum longitude is invalid"),
+    check("minPrice")
+        .optional()
+        .isFloat({min: 0})
+        .withMessage("Minimum price must be greater than or equal to 0"),
+    check("maxPrice")
+        .optional()
+        .isFloat({min: 0})
+        .withMessage("Maximum price must be greater than or equal to 0"),
+    handleValidationErrors
+]
+
+//Get all Spots (Including filter queries)
+router.get("/", validateQuery, async (req, res) => {
+    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
+    const where = {};
+
+    page = parseInt(page);
+    size = parseInt(size);
+
+    if (!page || page < 1){
+        page = 1;
+    }
+
+    if (!size || size < 1 || size > 20){
+        size = 20;
+    }
+
+    if (minLat !== undefined) {
+        where.lat = {...where.lat, [Op.gte]: parseFloat(minLat)};
+    }
+
+    if (maxLat !== undefined){
+        where.lat = {...where.lat, [Op.lte]: parseFloat(maxLat)};
+    }
+
+    if (minLng !== undefined){
+        where.lng = {...where.lng, [Op.gte]: parseFloat(minLng)};
+    }
+
+    if (maxLng !== undefined){
+        where.lng = {...where.lng, [Op.lte]: parseFloat(maxLng)};
+    }
+
+    if (minPrice !== undefined){
+        where.price = {...where.price, [Op.gte]: parseFloat(minPrice)};
+    }
+
+    if (maxPrice !== undefined){
+        where.price = {...where.price, [Op.lte]: parseFloat(maxPrice)};
+    }
+
+
+
+
     const spots = await Spot.findAll({
+        where,
+        limit: size,
+        offset: (page - 1) * size,
         include: [
             {model: SpotImage},
             {model: Review}
@@ -58,7 +139,11 @@ router.get("/", async (req, res) => {
         };
     });
 
-    return res.json({Spots: spotsWithDetails});
+    return res.json({
+        Spots: spotsWithDetails,
+        page: page,
+        size: size
+    });
 });
 
   //Get all Spots owned by the Current User
@@ -291,6 +376,58 @@ const validateReview = [
     handleValidationErrors
 ]
 
+
+//Get all Bookings for a Spot based on the Spot's id
+router.get("/:spotId/bookings", requireAuth, async (req, res) => {
+    const {spotId} = req.params;
+    const {id} = req.user;
+
+    const bookings = await Booking.findAll({
+        where: {spotId: spotId},
+        include: [
+            {model: Spot},
+            {model: User}
+        ]
+    });
+
+    if (bookings && bookings.length > 0){
+        const formattedBookings = bookings.map(booking => {
+            const spot = booking.Spot;
+            const user = booking.User;
+
+            if (id === spot.ownerId) {
+                return {
+                    User: {
+                        id: user.id,
+                        firstName: user.firstName,
+                        lastName: user.lastName
+                    },
+                    id: booking.id,
+                    spotId: booking.spotId,
+                    userId: booking.userId,
+                    startDate: booking.startDate,
+                    endDate: booking.endDate,
+                    createdAt: booking.createdAt,
+                    updatedAt: booking.updatedAt
+                }
+            } else {
+                return {
+                    spotId: booking.spotId,
+                    startDate: booking.startDate,
+                    endDate: booking.endDate
+                }
+            }
+        });
+        res.json({Bookings: formattedBookings});
+    } else {
+        res.status(404);
+        res.json({
+            "message": "Spot couldn't be found"
+        });
+    }
+});
+
+
 //Create a Review for a Spot based on the Spot's id
 router.post("/:spotId/reviews", requireAuth, validateReview, async (req, res) => {
     const {id} = req.user;
@@ -335,10 +472,8 @@ const validateBooking = [
     check("startDate")
         .custom(value => {
             const startDate = new Date(value);
-            console.log("startDate:", startDate)
             const currentDate = new Date();
-            console.log(currentDate);
-            console.log(startDate < currentDate)
+
             if (startDate < currentDate){
                 throw new Error("startDate cannot be in the past")
             }
@@ -348,11 +483,7 @@ const validateBooking = [
     check("endDate")
         .custom((value, {req}) => {
             const endDate = new Date(value);
-            console.log("endDate:",endDate);
             const startDate = new Date(req.body.startDate);
-            console.log("startDate:", startDate);
-
-            console.log(endDate <= startDate);
 
             if (endDate <= startDate){
                 throw new Error("endDate cannot be on or before startDate");
@@ -364,7 +495,7 @@ const validateBooking = [
 ]
 
 //Check for booking conflict
-const checkForBookingConflict = async (spotId,startDate, endDate) => {
+const checkForBookingConflict = async (spotId, startDate, endDate) => {
     const conflictingBookings = await Booking.findAll({
         where:{
             spotId: spotId,
@@ -436,6 +567,7 @@ router.post("/:spotId/bookings", requireAuth, validateBooking, checkBookingConfl
     }
 
 });
+
 
 
 module.exports = router;
