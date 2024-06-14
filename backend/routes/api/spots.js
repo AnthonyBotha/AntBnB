@@ -87,9 +87,6 @@ router.get("/", validateQuery, async (req, res) => {
         where.price = {...where.price, [Op.lte]: parseFloat(maxPrice)};
     }
 
-
-
-
     const spots = await Spot.findAll({
         where,
         limit: size,
