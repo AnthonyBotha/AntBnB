@@ -164,7 +164,10 @@ router.get("/", validateQuery, async (req, res) => {
 
 //Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
-    const {spotId} = req.params;
+    let {spotId} = req.params;
+
+    spotId = parseInt(spotId);
+    
     const spot = await Spot.findOne({
         where: {id: spotId},
         include: [
