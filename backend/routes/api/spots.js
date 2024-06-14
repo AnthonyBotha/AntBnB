@@ -222,6 +222,16 @@ router.post("/", requireAuth, validateSpot, async (req, res) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const {id} = req.user;
 
+    console.log("User Id:", id);
+    console.log("Address:", address);
+    console.log("City:", city);
+    console.log("Country:",country);
+    console.log("Lat:", lat);
+    console.log("Lng:", lng);
+    console.log("Name:",name);
+    console.log("Description:",description);
+    console.log("Price:", price);
+
     
     const newSpot = await Spot.create({
         ownerId: id,
