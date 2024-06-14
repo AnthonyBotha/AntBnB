@@ -164,9 +164,7 @@ router.get("/", validateQuery, async (req, res) => {
 
 //Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
-    let {spotId} = req.params;
-
-    spotId = parseInt(spotId);
+    const {spotId} = req.params;
 
     const spot = await Spot.findOne({
         where: {id: spotId},
@@ -221,17 +219,6 @@ const validateSpot = [
 router.post("/", requireAuth, validateSpot, async (req, res) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const {id} = req.user;
-
-    console.log("User Id:", id);
-    console.log("Address:", address);
-    console.log("City:", city);
-    console.log("Country:",country);
-    console.log("Lat:", lat);
-    console.log("Lng:", lng);
-    console.log("Name:",name);
-    console.log("Description:",description);
-    console.log("Price:", price);
-
     
     const newSpot = await Spot.create({
         ownerId: id,
