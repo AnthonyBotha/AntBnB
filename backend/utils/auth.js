@@ -48,7 +48,7 @@ const setTokenCookie = (res, user) => {
         const { id } = jwtPayload.data;
         req.user = await User.findByPk(id, {
           attributes: {
-            include: ["id", "firstName"," lastName", "username",'email', 'createdAt', 'updatedAt']
+            include: ['email', 'createdAt', 'updatedAt']
           }
         });
       } catch (e) {

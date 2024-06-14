@@ -167,7 +167,7 @@ router.get("/:spotId", async (req, res) => {
     let {spotId} = req.params;
 
     spotId = parseInt(spotId);
-    
+
     const spot = await Spot.findOne({
         where: {id: spotId},
         include: [
@@ -175,6 +175,8 @@ router.get("/:spotId", async (req, res) => {
             {model: User, as: "Owner", attributes: ["id", "firstName", "lastName"]}
         ]
     });
+
+    
     if (spot){
         return res.json(spot);
     } else {
