@@ -1,6 +1,6 @@
 const express = require('express');
 const {Op} = require("sequelize");
-const { Booking, Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
+const { Booking, Spot, SpotImage, User, Review, ReviewImage, sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
@@ -87,6 +87,9 @@ router.get("/", validateQuery, async (req, res) => {
         where.price = {...where.price, [Op.lte]: parseFloat(maxPrice)};
     }
 
+    console.log("Page:", page);
+    console.log("Size:", size);
+
     const spots = await Spot.findAll({
         where,
         limit: size,
@@ -131,7 +134,7 @@ router.get("/", validateQuery, async (req, res) => {
             price: spot.price,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
-            avgRating: avgRating.toFixed(1),
+            avgRating: parseFloat((avgRating).toFixed(1)),
             previewImage: previewImage  
         };
     });
@@ -152,7 +155,7 @@ router.get("/", validateQuery, async (req, res) => {
     });
 
     if (spots){
-        return res.json(spots);
+        return res.json({Spots:spots});
     } else {
         return res.json({
             "message": "The current user does not own a place"
@@ -170,17 +173,25 @@ router.get("/:spotId", async (req, res) => {
         where: {id: spotId},
         include: [
             {model: SpotImage},
-            {model: User, as: "Owner", attributes: ["id", "firstName", "lastName"]}
-        ]
+            {model: User, as: "Owner", attributes: ["id", "firstName", "lastName"]},
+            {model: Review, attributes: []}
+        ],
+        attributes: {
+            include: [
+                [sequelize.fn("count", sequelize.col("Reviews.id")),"numReviews"],
+                [sequelize.fn("avg", sequelize.col("Reviews.stars")),"avgRating"]
+            ]
+        }
     });
 
     
     if (spot){
         return res.json(spot);
     } else {
-        return res.json({
+        res.status(404);
+        res.json({
             "message": "Spot couldn't be found"
-          })
+          });
     }
     
 });
@@ -205,6 +216,8 @@ const validateSpot = [
         .isFloat({min: -180, max: 180})
         .withMessage("Longitude must be within -180 and 180"),
     check("name")
+        .exists({ checkFalsy: true })
+        .withMessage("Name is required")
         .isLength({max: 50})
         .withMessage("Name must be less than 50 characters"),
     check("description")
@@ -356,7 +369,7 @@ router.get("/:spotId/reviews", async (req, res) => {
     });
 
     if (reviews && reviews.length > 0){
-        res.json(reviews);
+        res.json({Reviews:reviews});
     } else {
         res.status(404);
         res.json({
