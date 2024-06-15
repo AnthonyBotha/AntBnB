@@ -55,11 +55,11 @@ router.get("/", validateQuery, async (req, res) => {
     page = parseInt(page);
     size = parseInt(size);
 
-    if (!page || page < 1){
+    if (!page || isNaN(page) || page < 1){
         page = 1;
     }
 
-    if (!size || size < 1 || size > 20){
+    if (!size || isNaN(page) || size < 1 || size > 20){
         size = 20;
     }
 
@@ -134,7 +134,7 @@ router.get("/", validateQuery, async (req, res) => {
             price: spot.price,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
-            avgRating: parseFloat((avgRating).toFixed(1)),
+            avgRating: Number((avgRating).toFixed(1)),
             previewImage: previewImage  
         };
     });
@@ -183,6 +183,10 @@ router.get("/:spotId", async (req, res) => {
             ]
         }
     });
+
+    if (spot && spot.dataValues.avgRating !== null){
+        spot.dataValues.avgRating = Number(spot.dataValues.avgRating.toFixed(1));
+    }
 
     
     if (spot){
