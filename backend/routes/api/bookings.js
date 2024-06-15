@@ -145,32 +145,40 @@ router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, as
             "message": "Past bookings can't be modified"
         });
     }
+    try {
 
-    const bookingToUpdate = await Booking.findByPk(bookingId);
+        const bookingToUpdate = await Booking.findByPk(bookingId);
 
-    if (bookingToUpdate) {
-        if (id === bookingToUpdate.userId){
-            bookingToUpdate.set({
-                startDate: startDate,
-                endDate: endDate
-            });
+        if (bookingToUpdate) {
+            if (id === bookingToUpdate.userId){
+                bookingToUpdate.set({
+                    startDate: startDate,
+                    endDate: endDate
+                });
 
-        await bookingToUpdate.save();
+            await bookingToUpdate.save();
 
-        return res.json(bookingToUpdate);
+            return res.json(bookingToUpdate);
+
+            } else {
+                res.status(403);
+                res.json({
+                    "message": "Forbidden"
+                })
+            }
 
         } else {
-            res.status(403);
-            res.json({
-                "message": "Forbidden"
-              })
+            res.status(404);
+            return res.json({
+                "message": "Booking couldn't be found"
+            })
         }
 
-    } else {
+    } catch (error) {
         res.status(404);
         return res.json({
             "message": "Booking couldn't be found"
-          })
+        });
     }
 });
 
