@@ -12,9 +12,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const validateSignup = [
     check('email')
-      .exists({ checkFalsy: true })
-      .withMessage("Email is required")
-      .bail()
       .isEmail()
       .withMessage("Invalid email")
       .bail()
