@@ -115,24 +115,34 @@ const checkBookingConflict = async (req, res, next) => {
     const {startDate, endDate} = req.body;
 
     const booking = await Booking.findByPk(bookingId);
-    const spotId = booking.spotId;
 
-    const isConflict = await checkForBookingConflict(spotId, new Date(startDate), new Date(endDate));
+    if (booking) {
+        const spotId = booking.spotId;
 
-    if (isConflict){
-        res.status(403);
+        const isConflict = await checkForBookingConflict(spotId, new Date(startDate), new Date(endDate));
+    
+        if (isConflict){
+            res.status(403);
+            return res.json({
+                "message": "Sorry, this spot is already booked for the specified dates",
+                "errors": {
+                    "startDate": "Start date conflicts with an existing booking",
+                    "endDate": "End date conflicts with an existing booking"
+                }
+            });
+        }
+    } else {
+        res.status(404);
         return res.json({
-            "message": "Sorry, this spot is already booked for the specified dates",
-            "errors": {
-                "startDate": "Start date conflicts with an existing booking",
-                "endDate": "End date conflicts with an existing booking"
-            }
+            "message": "Booking couldn't be found"
         });
     }
+
     next();
 }
 
-//Edit a Booking
+
+//Edit a Booking  - Troubleshoot: {"message":"Cannot read properties of null (reading 'spotId')"}
 router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, async (req, res) => {
     const {id} = req.user;
     const {bookingId} = req.params;
@@ -141,49 +151,44 @@ router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, as
 
     if (endDate < currentDate) {
         res.status(403);
-        res.json({
+        return res.json({
             "message": "Past bookings can't be modified"
         });
     }
-    try {
 
-        const bookingToUpdate = await Booking.findByPk(bookingId);
 
-        if (bookingToUpdate) {
-            if (id === bookingToUpdate.userId){
-                bookingToUpdate.set({
-                    startDate: startDate,
-                    endDate: endDate
-                });
+    const bookingToUpdate = await Booking.findByPk(bookingId);
 
-            await bookingToUpdate.save();
+    if (bookingToUpdate) {
+        if (id === bookingToUpdate.userId){
+            bookingToUpdate.set({
+                startDate: startDate,
+                endDate: endDate
+            });
 
-            return res.json(bookingToUpdate);
+        await bookingToUpdate.save();
 
-            } else {
-                res.status(403);
-                res.json({
-                    "message": "Forbidden"
-                })
-            }
+        return res.json(bookingToUpdate);
 
         } else {
-            res.status(404);
-            return res.json({
-                "message": "Booking couldn't be found"
+            res.status(403);
+            res.json({
+                "message": "Forbidden"
             })
         }
 
-    } catch (error) {
+    } else {
         res.status(404);
         return res.json({
             "message": "Booking couldn't be found"
-        });
+        })
     }
+
 });
 
 
-//Delete a Booking
+ 
+//Delete a Booking  -- troublshoot "Cannot read properties of undefined (reading 'ownerId')"
 router.delete("/:bookingId", requireAuth, async (req, res) => {
     const {id} = req.user;
     const {bookingId} = req.params;
@@ -197,7 +202,7 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
     const bookingToDelete = await Booking.findByPk(bookingId);
 
     if (bookingToDelete){
-        if (id === bookingToDelete.userId || id === bookingToDelete.Spot.ownerId) {
+        if (id === bookingToDelete.userId || id === booking.Spot.ownerId) {
 
             if (bookingToDelete.startDate < currentDate) {
                 res.status(403);
