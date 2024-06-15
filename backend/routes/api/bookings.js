@@ -139,12 +139,12 @@ router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, as
     const {startDate, endDate} = req.body;
     const currentDate = new Date();
 
-    if (endDate < currentDate) {
-        res.status(403);
-        res.json({
-            "message": "Past bookings can't be modified"
-        });
-    }
+    // if (endDate < currentDate) {
+    //     res.status(403);
+    //     res.json({
+    //         "message": "Past bookings can't be modified"
+    //     });
+    // }
 
     const bookingToUpdate = await Booking.findByPk(bookingId);
 
