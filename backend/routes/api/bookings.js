@@ -46,10 +46,10 @@ router.get("/current", requireAuth, async (req, res) => {
                 city: spot.city,
                 state: spot.state,
                 country: spot.country,
-                lat: spot.lat,
-                lng: spot.lng,
+                lat: Number(spot.lat),
+                lng: Number(spot.lng),
                 name: spot.name,
-                price: spot.price,
+                price: Number(spot.price),
                 previewImage: previewImage
             },
             userId: booking.userId,
@@ -142,7 +142,7 @@ const checkBookingConflict = async (req, res, next) => {
 }
 
 
-//Edit a Booking  - Troubleshoot: {"message":"Cannot read properties of null (reading 'spotId')"}
+//Edit a Booking 
 router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, async (req, res) => {
     const {id} = req.user;
     const {bookingId} = req.params;
@@ -188,7 +188,7 @@ router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, as
 
 
  
-//Delete a Booking  -- troublshoot "Cannot read properties of undefined (reading 'ownerId')"
+//Delete a Booking  
 router.delete("/:bookingId", requireAuth, async (req, res) => {
     const {id} = req.user;
     const {bookingId} = req.params;
