@@ -127,11 +127,11 @@ router.get("/", validateQuery, async (req, res) => {
             city: spot.city,
             state: spot.state,
             country: spot.country,
-            lat: Number(spot.lat),
-            lng: Number(spot.lng),
+            lat: spot.lat,
+            lng: spot.lng,
             name: spot.name,
             description: spot.description,
-            price: Number(spot.price),
+            price: spot.price,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
             avgRating: Number((avgRating).toFixed(1)),
@@ -184,9 +184,9 @@ router.get("/:spotId", async (req, res) => {
         }
     });
 
-    if (spot && spot.dataValues.avgRating !== null){
-        spot.dataValues.avgRating = Number(spot.dataValues.avgRating.toFixed(1));
-    }
+    // if (spot && spot.dataValues.avgRating !== null){
+    //     spot.dataValues.avgRating = Number(spot.dataValues.avgRating.toFixed(1));
+    // }
 
     
     if (spot){
