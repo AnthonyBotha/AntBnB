@@ -12,14 +12,6 @@ const router = express.Router();
 
 
 const validateQuery = [
-    check("page")
-        .optional()
-        .isInt({min: 1})
-        .withMessage("Page must be greater than or equal to 1"),
-    check("size")
-        .optional()
-        .isInt({min: 1, max: 20})
-        .withMessage("Size must be between 1 and 20"),
     check("maxLat")
         .optional()
         .isFloat({max: 90})
@@ -52,17 +44,35 @@ router.get("/", validateQuery, async (req, res) => {
     let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
     const where = {};
 
+    if (page === undefined || page < 1) {
+        page = 1
+    }
+
+    if (size === undefined || size < 1 || size > 20){
+        size = 20
+    }
+
+    const errors = {};
+
+    if (page && isNaN(page)){
+        errors.page = "Page must be greater than or equal to 1";
+    };
+    
+    if (size && isNaN(size)){
+        errors.size = "Size must be between 1 and 20";
+    }
+
+    if (page && isNaN(page) || size && isNaN(size)){
+        const err = Error("Bad Request");
+        err.errors = errors;
+        err.status = 400;
+        throw err;
+    }
+
+
     page = parseInt(page);
     size = parseInt(size);
-
-    if (!page || isNaN(page) || page < 1){
-        page = 1;
-    }
-
-    if (!size || isNaN(page) || size < 1 || size > 20){
-        size = 20;
-    }
-
+    
     if (minLat !== undefined) {
         where.lat = {...where.lat, [Op.gte]: parseFloat(minLat)};
     }
