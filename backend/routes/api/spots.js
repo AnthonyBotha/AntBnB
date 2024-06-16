@@ -174,44 +174,58 @@ router.get("/:spotId", async (req, res) => {
         include: [
             {model: SpotImage},
             {model: User, as: "Owner", attributes: ["id", "firstName", "lastName"]},
-            {model: Review, attributes: []}
-        ],
-        attributes: {
-            include: [
-                [sequelize.fn("count", sequelize.col("Reviews.id")),"numReviews"],
-                [sequelize.fn("avg", sequelize.col("Reviews.stars")),"avgStarRating"]
-            ]
-        }
+        ]
     });
 
     
-
-    
     if (spot){
+
+        const reviews = await Review.findAll({
+            where:{spotId: spotId}
+        });
+
+        let numReviews = 0;
+        let totalStars = 0;
+
+        reviews.forEach(review => {
+            numReviews = numReviews + 1;
+            totalStars = totalStars + review.stars;
+        });
+
+        if (numReviews > 0){
+            avgStarRating = Number((totalStars / numReviews).toFixed(1));
+        } else {
+            avgStarRating = 0;
+        }
+
         const spotWithCountAndAve = spot.toJSON();
 
-        console.log(spotWithCountAndAve);
-
-        if (spotWithCountAndAve.numReviews){
-            spotWithCountAndAve.numReviews = spotWithCountAndAve.numReviews;
-        } else {
-            spotWithCountAndAve.numReviews = 0;
+        const response = {
+            id: spotWithCountAndAve.id,
+            ownerId: spotWithCountAndAve.ownerId,
+            address: spotWithCountAndAve.address,
+            city: spotWithCountAndAve.city,
+            state: spotWithCountAndAve.state,
+            country: spotWithCountAndAve.country,
+            lat: spotWithCountAndAve.lat,
+            lng: spotWithCountAndAve.lng,
+            name: spotWithCountAndAve.name,
+            description: spotWithCountAndAve.description,
+            price: spotWithCountAndAve.price,
+            createdAt: spotWithCountAndAve.createdAt,
+            updatedAt: spotWithCountAndAve.updatedAt,
+            numReviews: numReviews,
+            avgStarRating: avgStarRating,
+            SpotImages: spotWithCountAndAve.SpotImages,
+            Owner: spotWithCountAndAve.Owner
         }
-
-        if (spotWithCountAndAve.avgStarRating){
-            spotWithCountAndAve.avgStarRating = Number(spotWithCountAndAve.avgStarRating.toFixed(1));
-        } else {
-            spotWithCountAndAve.avgStarRating = 0;
-        }
-
-        return res.json(spotWithCountAndAve);
+        res.json(response)
     } else {
         res.status(404);
         res.json({
             "message": "Spot couldn't be found"
-          });
+        });
     }
-    
 });
 
 const validateSpot = [
