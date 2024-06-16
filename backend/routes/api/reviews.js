@@ -69,13 +69,11 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 
     const review = await Review.findByPk(reviewId);
 
-    const reviewImageCount = await ReviewImage.count({
-        where: {reviewId: reviewId}
-    });
-
-    console.log("Review Image Count:", reviewImageCount);
-
     if (review){
+        const reviewImageCount = await ReviewImage.count({
+            where: {reviewId: reviewId}
+        });
+        
         if (review.userId === id){
             if (reviewImageCount < 10){
                 const newImage = await ReviewImage.create({
