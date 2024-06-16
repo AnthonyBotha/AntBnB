@@ -169,6 +169,23 @@ router.get("/", validateQuery, async (req, res) => {
 router.get("/:spotId", async (req, res) => {
     const {spotId} = req.params;
 
+    const numReviews = await Review.count({
+        where:{spotId: spotId}
+    });
+
+    if (numReviews){
+        const avgRating = await Review.sum({
+            stars,
+            where:{spotId :{
+                [Op.eq]: spotId
+            }}
+        })/numReviews;
+    } else {
+        const avgRating = 0;
+    }
+
+
+
     const spot = await Spot.findOne({
         where: {id: spotId},
         include: [
@@ -178,8 +195,8 @@ router.get("/:spotId", async (req, res) => {
         ],
         attributes: {
             include: [
-                [sequelize.fn("count", sequelize.col("Reviews.id")),"numReviews"],
-                [sequelize.fn("avg", sequelize.col("Reviews.stars")),"avgRating"]
+                [numReviews,"numReviews"],
+                [avgRating,"avgRating"]
             ]
         }
     });
