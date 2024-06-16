@@ -185,9 +185,13 @@ router.get("/:spotId", async (req, res) => {
     });
 
     
+
+    
     if (spot){
         const spotWithCountAndAve = spot.toJSON();
 
+        console.log(spotWithCountAndAve);
+        
         if (spotWithCountAndAve.numReviews){
             spotWithCountAndAve.numReviews = spotWithCountAndAve.numReviews;
         } else {
