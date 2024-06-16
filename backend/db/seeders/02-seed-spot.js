@@ -24,7 +24,6 @@ module.exports = {
     */
    await Spot.bulkCreate([
     {
-      id: 1,
       ownerId: 1,
       address: "123 Street Ave",
       city: "Los Angeles",
@@ -37,7 +36,6 @@ module.exports = {
       price: 234.43
     },
     {
-      id: 2,
       ownerId: 2,
       address: "52 Long Ave",
       city: "Salt Lake City",
@@ -50,7 +48,6 @@ module.exports = {
       price: 500.10
     },
     {
-      id: 3,
       ownerId: 3,
       address: "03 Washington Ave",
       city: "Boulder",
@@ -75,7 +72,7 @@ module.exports = {
      */
     options.tableName = "Spots";
     await queryInterface.bulkDelete(options,{
-      id: { [Op.in]: [1, 2, 3] }
+      name: { [Op.in]: ["Anthony's Pad","Snow Paradise", "Mountain Cabin"] }
     },{});
   }
 };

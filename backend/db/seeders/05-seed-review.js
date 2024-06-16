@@ -24,21 +24,18 @@ module.exports = {
     */
       await Review.bulkCreate([
         {
-          id:1,
           userId: 2,
           spotId: 2,
           review: "Pleasant stay",
           stars: 4
         },
         {
-          id: 2,
           userId: 3,
           spotId: 3,
           review: "Place was spotless",
           stars: 5
         },
         {
-          id: 3,
           userId: 1,
           spotId: 1,
           review: "Will recommend to anyone looking for great value",
@@ -57,7 +54,7 @@ module.exports = {
      */
     options.tableName = "Reviews";
     await queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3] }
+      review: { [Op.in]: ["Pleasant stay", "Place was spotless", "Will recommend to anyone looking for great value"] }
     } ,{});
   }
 };
