@@ -179,7 +179,7 @@ router.get("/:spotId", async (req, res) => {
         attributes: {
             include: [
                 [sequelize.fn("count", sequelize.col("Reviews.id")),"numReviews"],
-                [sequelize.fn("avg", sequelize.col("Reviews.stars")),"avgRating"]
+                [sequelize.fn("avg", sequelize.col("Reviews.stars")),"avgStarRating"]
             ]
         }
     });
@@ -191,17 +191,17 @@ router.get("/:spotId", async (req, res) => {
         const spotWithCountAndAve = spot.toJSON();
 
         console.log(spotWithCountAndAve);
-        
+
         if (spotWithCountAndAve.numReviews){
             spotWithCountAndAve.numReviews = spotWithCountAndAve.numReviews;
         } else {
             spotWithCountAndAve.numReviews = 0;
         }
 
-        if (spotWithCountAndAve.avgRating){
-            spotWithCountAndAve.avgRating = Number(spotWithCountAndAve.avgRating.toFixed(1));
+        if (spotWithCountAndAve.avgStarRating){
+            spotWithCountAndAve.avgStarRating = Number(spotWithCountAndAve.avgStarRating.toFixed(1));
         } else {
-            spotWithCountAndAve.avgRating = 0;
+            spotWithCountAndAve.avgStarRating = 0;
         }
 
         return res.json(spotWithCountAndAve);
