@@ -1,0 +1,74 @@
+ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+li {
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.profile-container {
+    position: relative;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 30px;
+    color: #373636;
+}
+
+button:hover {
+    text-decoration: underline;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%; /*Position the dropdown list directly below the profile button */
+    right: 0; /*Align the right edge of the dropdown with the right edge of the profile button */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    display: none;
+    flex-direction: column;
+    min-width: 200px;
+    z-index: 1000; /*Ensure the dropdown appears above other elements */
+    /* text-align: left; */
+}
+
+.profile-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+    text-align: left; /*Ensure the text is left aligned*/
+    width: 100%; /*Ensure the li takes full width of the dropdown*/
+    box-sizing: border-box; /*Include padding in the element's total width and height*/
+}
+
+.profile-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-dropdown.hidden {
+    display: none;
+}
+
+.profile-dropdown:not(.hidden){
+    display: flex;
+}
+
