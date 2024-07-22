@@ -23,17 +23,17 @@ module.exports = {
     */
         await SpotImage.bulkCreate([
           {
-            url: "www.spotimageurlone",
+            url: "https://drive.google.com/file/d/1cSvTPfIhjPAANM9rQyDMs1mig9-IQbMn/view?usp=drive_link",
             preview: true,
             spotId: 2
           },
           {
-            url: "www.spotimageurltwo",
+            url: "https://drive.google.com/file/d/17306OficXpdmaEPl7EVw3eDirUPOK_ya/view?usp=drive_link",
             preview: false,
             spotId: 1
           },
           {
-            url: "www.spotimageurlthree",
+            url: "https://drive.google.com/file/d/1TWvRnJcevpSbr251jDpfxC4L9xLWtDnX/view?usp=drive_link",
             preview: true,
             spotId: 3
           }
