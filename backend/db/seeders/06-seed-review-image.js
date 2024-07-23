@@ -25,15 +25,15 @@ module.exports = {
     */
         await ReviewImage.bulkCreate([
           {
-            url: "www.reviewimageurlone",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698721/Review_Image_3_nm4fmi.jpg",
             reviewId: 1
           },
           {
-            url: "www.reviewimageurltwo",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Review_Image_1_nunyk2.jpg",
             reviewId: 2
           },
           {
-            url: "www.reviewimageurlthree",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698720/Review_Image_2_lcojaq.jpg",
             reviewId: 3
           }
         ],{validate:true})
@@ -48,7 +48,9 @@ module.exports = {
      */
       options.tableName = "ReviewImages"
       await queryInterface.bulkDelete(options, {
-        url: { [Op.in]: ["www.reviewimageurlone", "www.reviewimageurltwo", "www.reviewimageurlthree"] }
+        url: { [Op.in]: ["https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698721/Review_Image_3_nm4fmi.jpg",
+          "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Review_Image_1_nunyk2.jpg",
+          "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698720/Review_Image_2_lcojaq.jpg"] }
       },{});
   }
 };

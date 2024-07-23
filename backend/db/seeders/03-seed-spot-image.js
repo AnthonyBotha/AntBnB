@@ -23,17 +23,17 @@ module.exports = {
     */
         await SpotImage.bulkCreate([
           {
-            url: "https://drive.google.com/uc?export=view&id=1TWvRnJcevpSbr251jDpfxC4L9xLWtDnX",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698727/Preview_Image_1_h6kwv6.jpg",
             preview: true,
             spotId: 2
           },
           {
-            url: "https://drive.google.com/uc?export=view&id=17306OficXpdmaEPl7EVw3eDirUPOK_ya",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Preview_Image_3_clmmae.jpg",
             preview: false,
             spotId: 1
           },
           {
-            url: "https://drive.google.com/uc?export=view&id=1TWvRnJcevpSbr251jDpfxC4L9xLWtDnX",
+            url: "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Preview_Image_2_kzurmw.jpg",
             preview: true,
             spotId: 3
           }
@@ -49,7 +49,9 @@ module.exports = {
      */
     options.tableName = "SpotImages";
     await queryInterface.bulkDelete(options,{
-      url: { [Op.in]: ["www.spotimageurlone", "www.spotimageurltwo", "www.spotimageurlthree"] }
+      url: { [Op.in]: ["https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698727/Preview_Image_1_h6kwv6.jpg",
+         "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Preview_Image_3_clmmae.jpg",
+          "https://res.cloudinary.com/dmg8yuivs/image/upload/v1721698719/Preview_Image_2_kzurmw.jpg"] }
     },{});
   }
 };
