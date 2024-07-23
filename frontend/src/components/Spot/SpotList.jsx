@@ -18,7 +18,7 @@ const SpotList = () => {
         <div className="spot-list">
             <div className="spot-grid">
                 {spotList.map(spot =>  (
-                    <div key={spot.id} className="spot">
+                    <div key={spot.id} className="spot-item">
                         <img src={spot.previewImage} alt={spot.city} className="spot-image"/>
                         <div className="spot-info">
                             <div className="spot-location">
