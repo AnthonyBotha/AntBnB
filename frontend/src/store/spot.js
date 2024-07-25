@@ -1,5 +1,5 @@
-
 const LOAD_SPOTS = "spots/LOAD_SPOTS";
+
 
 //Actions
 const load = (list) => {
@@ -19,12 +19,13 @@ export const getAllSpots = () => async (dispatch) => {
     }
 };
 
+
 const initialState = {};
 //Reducer
 const spotReducer = (state = initialState, action) => {
-    let newState = {...state};
     switch(action.type) {
         case LOAD_SPOTS: {
+            const newState = {...state};
             action.payload.Spots.forEach(spot => newState[spot.id] = spot);
             return newState;
         }

@@ -1,0 +1,169 @@
+/* SpotDetails CSS */
+.spotDetails-page-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.spotDetails-container {
+    width: 100%;
+}
+
+.spotDetails-container h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.spotDetails-container h4 {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.spotDetails-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.spotDetails-main-image-container {
+    flex: 1;
+}
+
+.spotDetails-main-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.spotDetails-images-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    flex: 1;
+}
+
+.spotDetails-images-grid img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.spotDetails-text-content {
+    margin-top: 20px;
+    padding-right: 180px; /*Adding padding to accomodate the price container */
+}
+
+.spotDetails-text-content p {
+    color: black;
+    font-style: italic;
+}
+
+
+.spotDetails-container h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.spotDetails-container p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.price-container {
+    position: absolute;
+    right: 130px;
+    bottom: -20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 350px;
+}
+
+.price-rating-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.price {
+    align-self: flex-start;
+}
+
+.rating-review-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-end;
+    flex-grow: 1;
+    margin-left: auto;
+}
+
+.price-container .star-icon {
+    color: #ff5a5f;
+}
+
+.price-container .dot {
+    margin: 0 5px;
+}
+
+.reserve-button {
+    padding: 10px 20px;
+    background-color: #ff5a5f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.price-container button:hover {
+    background-color: #e04e4e;
+}
+
+.divider {
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.spotReviews-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Responsive CSS */
+@media (max-width: 768px) {
+    .spotDetails-content {
+        flex-direction: column;
+    }
+
+    .spotDetails-images-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .price-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .spotDetails-text-content {
+        padding-right: 0;
+    }
+}
+
