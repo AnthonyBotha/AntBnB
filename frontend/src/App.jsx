@@ -4,6 +4,9 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
 import SpotList from "./components/Spot/SpotList";
 import SpotDetails from "./components/Spot/SpotDetails";
+import SpotForm from "./components/Spot/SpotForm";
+import SpotManage from "./components/Spot/SpotManage";
+import SpotFormUpdate from "./components/Spot/SpotFormUpdate";
 import * as sessionActions from "./store/session";
 
 function Layout() {
@@ -40,6 +43,22 @@ const router = createBrowserRouter([
       {
         path:"/spots/:spotId",
         element: <SpotDetails />
+      },
+      {
+        path:"/spots/new",
+        element: <SpotForm />
+      },
+      {
+        path:"/spots/current",
+        element: <SpotManage />
+      },
+      {
+        path:"/spots/:spotId/edit",
+        element: <SpotFormUpdate />
+      },
+      {
+        path: "*",
+        element: <h1>Page Not Found</h1>
       }
     ]
   }

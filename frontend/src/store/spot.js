@@ -1,5 +1,6 @@
-const LOAD_SPOTS = "spots/LOAD_SPOTS";
+import { csrfFetch } from "./csrf";
 
+const LOAD_SPOTS = "/spots/LOAD_SPOTS";
 
 //Actions
 const load = (list) => {
@@ -11,14 +12,13 @@ const load = (list) => {
 
 //Thunks
 export const getAllSpots = () => async (dispatch) => {
-    const response = await fetch("/api/spots");
+    const response = await csrfFetch("/api/spots");
 
     if (response.ok) {
         const list = await response.json();
         dispatch(load(list));
     }
 };
-
 
 const initialState = {};
 //Reducer

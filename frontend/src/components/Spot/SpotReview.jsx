@@ -8,15 +8,18 @@ const SpotReviews = () => {
     const { spotId } = useParams();
     const dispatch = useDispatch();
 
-    const spotReviews = useSelector(state => state.spotReview);
-    const spotReviewsArray = Object.values(spotReviews);
+    const allSpotReviews = useSelector(state => state.spotReview);
+    const allSpotReviewsArray = Object.values(allSpotReviews);
+    const spotReviewsArray = allSpotReviewsArray.filter(review => review.spotId === parseInt(spotId));
 
+    console.log("allSpotReviews:", allSpotReviews);
+    
     useEffect(() => {
         dispatch(getSpotReviews(spotId));
     }, [dispatch, spotId])
 
 
-    if (!spotReviews) {
+    if (!allSpotReviews) {
         return
     }
 

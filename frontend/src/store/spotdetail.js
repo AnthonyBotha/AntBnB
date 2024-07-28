@@ -1,4 +1,6 @@
-const LOAD_SPOTDETAILS = "spots/LOAD_SPOTDETAILS";
+import { csrfFetch } from "./csrf";
+
+const LOAD_SPOTDETAILS = "/spots/LOAD_SPOTDETAILS";
 
 //Actions
 const loadSpotDetails = (spotdetails) => {
@@ -10,11 +12,12 @@ const loadSpotDetails = (spotdetails) => {
 
 //Thunks
 export const getSpotDetails = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}`);
+    const response = await csrfFetch(`/api/spots/${spotId}`);
 
     if (response.ok) {
         const spotDetails = await response.json();
         dispatch(loadSpotDetails(spotDetails));
+        return spotDetails;
     }
 };
 

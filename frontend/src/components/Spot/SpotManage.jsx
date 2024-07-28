@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spot";
 import { FaStar } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./SpotList.css";
 
-const SpotList = () => {
+const SpotManage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const spots = useSelector(state => state.spot);
     const spotList = Object.values(spots);
@@ -22,9 +23,11 @@ const SpotList = () => {
 
     return (
         <div className="spot-list">
+            <h1>Manage Your Spots</h1>
+            <button onClick={() => navigate("/spots/new")}>Create a New Spot</button>
             <div className="spot-grid">
                 {spotList.map(spot =>  (
-                    <NavLink key={spot.id+spot.name} to={`/spots/${spot.id}`} >
+                    <div>
                         <div key={spot.id} className="spot-item">
                             <div className="spot-tooltip">{spot.name}</div>
                             <img src={spot.previewImage} alt={spot.city} className="spot-image"/>
@@ -36,7 +39,9 @@ const SpotList = () => {
                                 <span className="spot-price">${spot.price}</span><span>/night</span>
                             </div>
                         </div>
-                    </NavLink>
+                        <span><button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Update</button></span>
+                        <span><button>Delete</button></span>
+                    </div>
                 ))}
             </div>
         </div>
@@ -44,4 +49,4 @@ const SpotList = () => {
 
 }
 
-export default SpotList;
+export default SpotManage;
