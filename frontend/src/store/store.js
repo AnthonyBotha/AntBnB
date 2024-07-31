@@ -6,15 +6,19 @@ import spotDetailReducer from "./spotdetail";
 import spotReviewReducer from "./spotreview";
 import spotCrudReducer from "./spotcrud";
 import spotImageCrudReducer from "./spotimagecrud";
+import reviewCrudReducer from "./spotreviewcrud";
+import userReviewReducer from "./userreviewcrud";
 
 
 const rootReducer = combineReducers({
     session: sessionReducer,
     spot: spotReducer,
     spotDetail: spotDetailReducer,
-    spotReview: spotReviewReducer,
     spotCrud: spotCrudReducer,
-    spotImageCrud: spotImageCrudReducer
+    spotImageCrud: spotImageCrudReducer,
+    spotReview: spotReviewReducer,
+    reviewCrud: reviewCrudReducer,
+    userReviewCrud: userReviewReducer
 });
 
 let enhancer;

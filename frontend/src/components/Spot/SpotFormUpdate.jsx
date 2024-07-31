@@ -49,30 +49,33 @@ const SpotFormUpdate = () => {
             setName(spotDetails.name);
             setPrice(spotDetails.price);
             
-            const previewImage = spotDetails.SpotImages.filter(image => image.preview);
-            const otherImages = spotDetails.SpotImages.filter(image => !image.preview);
-
             if (spotDetails.SpotImages.length === 1 ){
                 setPreviewImageUrl(spotDetails.SpotImages[0].url);
             } else if (spotDetails.SpotImages.length === 2){
-                setPreviewImageUrl(previewImage[0].url)
-                setImageOneUrl(otherImages[0].url);
+                setPreviewImageUrl(spotDetails.SpotImages[0].url)
+                setImageOneUrl(spotDetails.SpotImages[1].url);
             } else if (spotDetails.SpotImages.length === 3){
-                setPreviewImageUrl(previewImage[0].url);
-                setImageOneUrl(otherImages[0].url);
-                setImageTwoUrl(otherImages[1].url);
+                setPreviewImageUrl(spotDetails.SpotImages[0].url);
+                setImageOneUrl(spotDetails.SpotImages[1].url);
+                setImageTwoUrl(spotDetails.SpotImages[2].url);
             } else if (spotDetails.SpotImages.length === 4){
-                setPreviewImageUrl(previewImage[0].url)
-                setImageOneUrl(otherImages[0].url);
-                setImageTwoUrl(otherImages[1].url);
-                setImageThreeUrl(otherImages[2].url);
+                setPreviewImageUrl(spotDetails.SpotImages[0].url)
+                setImageOneUrl(spotDetails.SpotImages[1].url);
+                setImageTwoUrl(spotDetails.SpotImages[2].url);
+                setImageThreeUrl(spotDetails.SpotImages[3].url);
+            } else if (spotDetails.SpotImages.length === 5){
+                setPreviewImageUrl(spotDetails.SpotImages[0].url);
+                setImageOneUrl(spotDetails.SpotImages[1].url);
+                setImageTwoUrl(spotDetails.SpotImages[2].url);
+                setImageThreeUrl(spotDetails.SpotImages[3].url);
+                setImageFourUrl(spotDetails.SpotImages[4].url);
             } else {
-                setPreviewImageUrl(previewImage[0].url);
-                setImageOneUrl(otherImages[0].url);
-                setImageTwoUrl(otherImages[1].url);
-                setImageThreeUrl(otherImages[2].url);
-                setImageFourUrl(otherImages[3].url);
-            } 
+                setPreviewImageUrl("");
+                setImageOneUrl("");
+                setImageTwoUrl("");
+                setImageThreeUrl("");
+                setImageFourUrl("");
+            }
         }
     },[spotDetails]);
 
@@ -178,7 +181,7 @@ const SpotFormUpdate = () => {
                 
                 //Filter out empty image urls before dispatching
                 const validImages = images.filter(image => image.url.trim().length > 0);
-                console.log("validImages:", validImages);
+     
 
                 //Use Promise.all to wait for all image dispatches
                 await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));

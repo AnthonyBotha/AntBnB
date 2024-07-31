@@ -4,13 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { getSpotDetails } from "../../store/spotdetail";
 import { FaStar } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
-import SpotReviews from "./SpotReview";
+import { useModal } from "../../context/Modal";
+import SpotReviews from "../Review/ReviewList";
+import ReviewFormModal from "../Review/ReviewForm";
 import "./SpotDetail.css";
 
 const SpotDetails = () => {
 
-    const { spotId } = useParams();
     const dispatch = useDispatch();
+    const { spotId } = useParams();
+    const { setModalContent } = useModal();
     
     const spotDetails = useSelector(state => state.spotDetail[spotId]);
     
@@ -67,6 +70,15 @@ const SpotDetails = () => {
             </div>
             <div className="divider"></div>
             <div className="spotReviews-container">
+                <span className="star-and-rating"><FaStar className="star-icon"/>{spotDetails.avgStarRating}</span>
+                            {(spotDetails.numReviews === 1) ? (
+                                <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>
+                            ) : (
+                                <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>
+                            )}
+                <div>
+                    <button onClick={() => setModalContent(<ReviewFormModal spotId={spotDetails.id}/>)}>Post Your Review</button>
+                </div>
                 <SpotReviews />
             </div>
         </div>

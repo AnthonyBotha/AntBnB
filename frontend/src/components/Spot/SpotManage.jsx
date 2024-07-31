@@ -2,12 +2,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spot";
 import { FaStar } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useModal } from "../../context/Modal";
+import DeleteSpotModal from "./SpotDeleteModal";
 import "./SpotList.css";
 
 const SpotManage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { setModalContent } = useModal();
+
 
     const spots = useSelector(state => state.spot);
     const spotList = Object.values(spots);
@@ -27,8 +31,8 @@ const SpotManage = () => {
             <button onClick={() => navigate("/spots/new")}>Create a New Spot</button>
             <div className="spot-grid">
                 {spotList.map(spot =>  (
-                    <div>
-                        <div key={spot.id} className="spot-item">
+                    <div key={spot.id} >
+                        <div className="spot-item">
                             <div className="spot-tooltip">{spot.name}</div>
                             <img src={spot.previewImage} alt={spot.city} className="spot-image"/>
                             <div className="spot-info">
@@ -40,7 +44,7 @@ const SpotManage = () => {
                             </div>
                         </div>
                         <span><button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Update</button></span>
-                        <span><button>Delete</button></span>
+                        <span><button onClick={() => setModalContent(<DeleteSpotModal spotId={spot.id} />)}>Delete</button></span>
                     </div>
                 ))}
             </div>

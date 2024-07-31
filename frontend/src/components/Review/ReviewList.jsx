@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getSpotReviews } from "../../store/spotreview";
-import "./SpotReview.css";
+import "./ReviewList.css";
 
 const SpotReviews = () => {
     const { spotId } = useParams();
@@ -11,8 +11,6 @@ const SpotReviews = () => {
     const allSpotReviews = useSelector(state => state.spotReview);
     const allSpotReviewsArray = Object.values(allSpotReviews);
     const spotReviewsArray = allSpotReviewsArray.filter(review => review.spotId === parseInt(spotId));
-
-    console.log("allSpotReviews:", allSpotReviews);
     
     useEffect(() => {
         dispatch(getSpotReviews(spotId));
