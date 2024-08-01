@@ -1,11 +1,19 @@
 import { csrfFetch } from "./csrf";
 
 const CREATE_REVIEW = "/reviews/CREATE_REVIEW";
+const UPDATE_REVIEW = "/reviews/UPDATE_REVIEW";
 
 //Actions
 const createReview = (review) => {
     return {
         type: CREATE_REVIEW,
+        payload: review
+    }
+};
+
+const updateReview = (review) => {
+    return {
+        type: UPDATE_REVIEW,
         payload: review
     }
 };
@@ -24,6 +32,21 @@ export const createNewReview = (spotId, reviewBody) => async(dispatch) => {
         } 
 }
 
+export const updateExistingReview = (reviewId, reviewBody) => async(dispatch) => {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`,{
+        method: "PUT",
+        body: JSON.stringify(reviewBody)
+    });
+
+    if (response.ok) {
+        const updatedReview = await response.json();
+        dispatch(updateReview(updatedReview));
+        return updatedReview;
+    }
+}
+
+
+
 const initialState = {};
 //Reducer
 const reviewCrudReducer = (state = initialState, action) => {
@@ -33,6 +56,12 @@ const reviewCrudReducer = (state = initialState, action) => {
             newState[action.payload.id] = action.payload;
             return newState;
         }
+        case UPDATE_REVIEW: {
+            const newState = {...state};
+            newState[action.payload.id] = action.payload;
+            return newState;
+        }
+
         default:
             return state;
     }

@@ -7,7 +7,7 @@ import SpotDetails from "./components/Spot/SpotDetails";
 import SpotForm from "./components/Spot/SpotForm";
 import SpotManage from "./components/Spot/SpotManage";
 import SpotFormUpdate from "./components/Spot/SpotFormUpdate";
-import UserReviews from "./components/Review/ReviewUpdate";
+import UserReviews from "./components/Review/ReviewManage";
 import * as sessionActions from "./store/session";
 
 function Layout() {
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <SpotFormUpdate />
       },
       {
-        path:"reviews/current",
+        path:"/reviews/current",
         element: <UserReviews />
       },
       {

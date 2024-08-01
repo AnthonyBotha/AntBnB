@@ -15,8 +15,8 @@ const SpotFormUpdate = () => {
     const spotDetails = useSelector(state => state.spotDetail[spotId]);
     
     useEffect (() => {
-        dispatch(getSpotDetails(spotId));
-    }, [dispatch, spotId])
+        dispatch(getSpotDetails(spotId))
+    }, [dispatch, spotId]);
 
     
     const [country, setCountry] = useState("");

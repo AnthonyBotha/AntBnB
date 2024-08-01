@@ -1,35 +1,36 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteExistingSpot } from "../../store/spotcrud";
+import { deleteExistingReview } from "../../store/userreviewcrud";
+import { getUserReviews } from "../../store/userreviewcrud";
 import { useModal } from "../../context/Modal";
 
-const DeleteSpotModal = ({spotId}) => {
+const DeleteReviewModal = ({reviewId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
     const [message, setMessage] = useState("");
 
-
     const handleDelete = async () => {
-        const result = await dispatch(deleteExistingSpot(spotId));
+        const result = await dispatch(deleteExistingReview(reviewId));
 
         if (result){
-            setMessage("Spot Successfully Deleted.");
+            setMessage("Review Successfully Deleted.");
 
+            await dispatch(getUserReviews());
+            
             setTimeout(() => {
                 closeModal();
             }, 2000);
         }
     };
-    
 
     return (
         <div>
             {!message? (
                 <>
                     <h2>Confirm Delete</h2>
-                    <p>Are you sure you want to remove this spot from the listings?</p>
-                    <button onClick={handleDelete}>Yes (Delete Spot)</button>
-                    <button onClick={closeModal}>No (Keep Spot)</button>
+                    <p>Are you sure you want to delete this review?</p>
+                    <button onClick={handleDelete}>Yes (Delete Reviews)</button>
+                    <button onClick={closeModal}>No (Keep Review)</button>
                 </>
             ):(
                 <h2>{message}</h2>
@@ -38,4 +39,4 @@ const DeleteSpotModal = ({spotId}) => {
     );
 }
 
-export default DeleteSpotModal;
+export default DeleteReviewModal;

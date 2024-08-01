@@ -1,18 +1,36 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { createNewReview } from "../../store/spotreviewcrud";
-import { getSpotReviews } from "../../store/spotreview";
+import { useSelector, useDispatch } from "react-redux";
+import { getUserReviews } from "../../store/userreviewcrud";
+import { updateExistingReview } from "../../store/spotreviewcrud";
 import { FaStar } from "react-icons/fa";
 import { useModal } from "../../context/Modal";
 import "./ReviewForm.css"
 
-const ReviewFormModal = ({spotId}) => {
+const UpdateReviewFormModal = ({reviewId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
+    
+
+
+    const reviewDetails = useSelector(state => state.userReviewCrud[reviewId]);
+
+    
+    useEffect (() => {
+        dispatch(getUserReviews(reviewId))
+    }, [dispatch, reviewId]);
+
+
     const [review, setReview] = useState("");
     const [stars, setStars] = useState("")
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (reviewDetails) {
+            setReview(reviewDetails.review);
+            setStars(reviewDetails.stars);
+        }
+    },[reviewDetails]);
 
     useEffect(() => {
         const newErrors = {};
@@ -42,13 +60,13 @@ const ReviewFormModal = ({spotId}) => {
                 stars
             }
         
-            const newReview = await dispatch(createNewReview(spotId, reviewFormValues));
+            const updatedReview = await dispatch(updateExistingReview(reviewId, reviewFormValues));
             
-            if (newReview){
-                setMessage("Review Successfully Created.");
+            if (updatedReview){
+                setMessage("Review Successfully Updated.");
 
-                await dispatch(getSpotReviews(spotId));
-
+                await dispatch(getUserReviews());
+                
                 setTimeout(() => {
                     closeModal();
                 }, 2000);
@@ -70,7 +88,8 @@ const ReviewFormModal = ({spotId}) => {
             <div>
                 {!message? (
                     <>
-                        <h1>How was your stay?</h1>
+                        <h1>How was your stay at</h1>
+                        <h1>{reviewDetails.Spot.name}?</h1>
                         <textarea 
                             type="text"
                             name="review"
@@ -106,7 +125,7 @@ const ReviewFormModal = ({spotId}) => {
                             disabled={Object.keys(errors).length > 0 || review.length < 10 || stars < 1}
                             className={Object.keys(errors).length > 0 || review.length < 10 || stars < 1 ? "disabled-button" : "enabled-button"}
                         >
-                            Submit Your Review
+                            Update Your Review
                         </button>
                     </>
 
@@ -118,4 +137,4 @@ const ReviewFormModal = ({spotId}) => {
     )
 }
 
-export default ReviewFormModal;
+export default UpdateReviewFormModal;
