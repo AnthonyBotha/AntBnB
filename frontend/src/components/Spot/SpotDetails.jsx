@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getSpotDetails } from "../../store/spotdetail";
@@ -8,6 +8,7 @@ import { useModal } from "../../context/Modal";
 import SpotReviews from "../Review/ReviewList";
 import ReviewFormModal from "../Review/ReviewForm";
 import "./SpotDetail.css";
+import { getSpotReviews } from "../../store/spotreview";
 
 const SpotDetails = () => {
 
@@ -16,19 +17,38 @@ const SpotDetails = () => {
     const { setModalContent } = useModal();
     
     const spotDetails = useSelector(state => state.spotDetail[spotId]);
+    const sessionUser = useSelector(state => state.session.user); //Get the logged-in user
+    const spotReviews = useSelector(state => state.spotReview);
+    const spotReviewsArray = Object.values(spotReviews);
+
+    const [userHasPostedReview, setUserHasPostedReview] = useState(false);
+    
     
     
     useEffect (() => {
         dispatch(getSpotDetails(spotId));
-    }, [dispatch, spotId])
+        dispatch(getSpotReviews(spotId));
+    }, [dispatch, spotId]);
 
-    if (!spotDetails) {
-        return
+    useEffect(() => {
+        if (spotReviews) {
+            const userReview = spotReviewsArray.find(review => review.userId === sessionUser.id);
+            if (userReview){
+                setUserHasPostedReview(true);
+            }
+        }
+    },[spotId, spotReviews, spotReviewsArray, sessionUser])
+
+    if (!spotDetails || !spotReviews){
+        return;
     }
-
+    
     const mainImage = spotDetails.SpotImages.find(image => image.preview);
-
-    const otherImages = spotDetails.SpotImages.filter(image => !image.preview)
+    
+    const otherImages = spotDetails.SpotImages.filter(image => !image.preview);
+    
+    //Check if the logged-in user has already posted a review
+    console.log("Session User:", userHasPostedReview);
 
     return (
         <div className="spotDetails-page-layout">
@@ -57,12 +77,9 @@ const SpotDetails = () => {
                     <div className="price-rating-group">
                         <span className="price">${spotDetails.price}/night</span>
                         <div className="rating-review-group">
-                            <span className="star-and-rating"><FaStar className="star-icon"/>{spotDetails.avgStarRating}</span>
-                            {(spotDetails.numReviews === 1) ? (
-                                <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>
-                            ) : (
-                                <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>
-                            )}
+                            <span className="star-and-rating"><FaStar className="star-icon"/>{(spotDetails.avgStarRating === 0)?("New"):(spotDetails.avgStarRating)}</span>
+                            {spotDetails.numReviews === 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>}
+                            {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
                         </div>
                     </div>
                 <button className="reserve-button" onClick={() => alert("Feature Coming Soon...")}>Reserve</button>
@@ -70,14 +87,13 @@ const SpotDetails = () => {
             </div>
             <div className="divider"></div>
             <div className="spotReviews-container">
-                <span className="star-and-rating"><FaStar className="star-icon"/>{spotDetails.avgStarRating}</span>
-                            {(spotDetails.numReviews === 1) ? (
-                                <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>
-                            ) : (
-                                <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>
-                            )}
+            <span className="star-and-rating"><FaStar className="star-icon"/>{(spotDetails.avgStarRating === 0)?("New"):(spotDetails.avgStarRating)}</span>
+                            {spotDetails.numReviews === 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>}
+                            {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
                 <div>
-                    <button onClick={() => setModalContent(<ReviewFormModal spotId={spotDetails.id}/>)}>Post Your Review</button>
+                    {sessionUser && (sessionUser.id !== spotDetails.ownerId) && !userHasPostedReview && (
+                        <button onClick={() => setModalContent(<ReviewFormModal spotId={spotDetails.id}/>)}>Post Your Review</button>
+                    )}
                 </div>
                 <SpotReviews />
             </div>

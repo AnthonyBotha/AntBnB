@@ -1,6 +1,7 @@
 /* General styles */
 .spot-list {
-    padding: 20px;
+    padding: 20px; 
+    height: 100vh;
 }
 
 /* Responsive Layout */
@@ -45,7 +46,7 @@
     cursor: pointer; /* Pointer cursor for clickable elements */
     position: relative;
     width: 100%; /* Ensure the width fills the grid column */
-    padding-bottom: 100%; /* Maintains a square aspect ratio */
+    height: 300px; /* Set a fixed height to reduce the item size */
     display: flex;
     flex-direction: column; /* Stack the image and the info vertically */
 }
@@ -56,7 +57,7 @@
 
 .spot-image {
     width: 100%;
-    height: 100%; 
+    height: 70%; 
     object-fit: cover; /* Ensures the image is not zoomed in and fully visible */
     flex-grow: 1; /* Allow the image to take the remaining space */
 

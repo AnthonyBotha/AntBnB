@@ -55,5 +55,15 @@ a:hover {
     text-decoration: underline;
 }
 
+button {
+    padding: 10px 20px;
+    background-color: #ff5a5f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
 
 

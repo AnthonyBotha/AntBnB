@@ -31,7 +31,7 @@ const SpotList = () => {
                             <div className="spot-info">
                                 <div className="spot-location">
                                     <span> {spot.city}, {spot.state}</span>
-                                    <span className="spot-rating"><FaStar className="star-icon"/>{spot.avgRating}</span>
+                                    <span className="star-and-rating"><FaStar className="star-icon"/>{(spot.avgRating === 0)?("New"):(spot.avgRating)}</span>
                                 </div>
                                 <span className="spot-price">${spot.price}</span><span>/night</span>
                             </div>
