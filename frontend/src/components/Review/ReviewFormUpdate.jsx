@@ -10,7 +10,9 @@ const UpdateReviewFormModal = ({reviewId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
     
-    const reviewDetails = useSelector(state => state.userReviewCrud[reviewId]);
+    const reviews = useSelector(state => state.userReviewCrud);
+
+    const reviewDetails = reviews[reviewId];
 
     useEffect (() => {
         dispatch(getUserReviews())
@@ -67,7 +69,7 @@ const UpdateReviewFormModal = ({reviewId}) => {
                 
                 setTimeout(() => {
                     closeModal();
-                }, 2000);
+                }, 3000);
             } 
             
             //Clear form inputs after successful submission

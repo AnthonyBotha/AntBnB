@@ -7,22 +7,21 @@ function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
   
     return (
-        <ul>
-            <li>
-                <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-                <div className="create-spot-container">
-                    <span><NavLink to="/spots/new">Create a New Spot</NavLink></span>
-                    {isLoaded && (
-                        <div className="profile-container">
-                            <ProfileButton user={sessionUser}/>
-                        </div>
-                    )}
-                </div>
-            </li>
-   
-        </ul>
+        <div className="navigation-bar">
+            <div className="logo">
+                <NavLink to="/"><img src={"https://res.cloudinary.com/dmg8yuivs/image/upload/v1722723783/ant_mneaqz.png"} alt="Home"/></NavLink>
+            </div>
+            
+            <div className="create-spot-container">
+                <span><NavLink to="/spots/new">Create a New Spot</NavLink></span>
+                {isLoaded && (
+                    <div className="profile-container">
+                        <ProfileButton user={sessionUser}/>
+                    </div>
+                )}
+            </div>
+        </div>
+
     );
 }
 

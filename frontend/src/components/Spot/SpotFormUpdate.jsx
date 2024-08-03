@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSpotDetails } from "../../store/spotdetail";
 import { updateExistingSpot } from "../../store/spotcrud";
 import { addNewSpotImage } from "../../store/spotimagecrud";
+import { deleteExistingSpotImage } from "../../store/spotimagecrud";
 
 const SpotFormUpdate = () => {
 
@@ -75,6 +76,7 @@ const SpotFormUpdate = () => {
                 setImageThreeUrl("");
                 setImageFourUrl("");
             }
+
         }
     },[spotDetails]);
 
@@ -180,7 +182,9 @@ const SpotFormUpdate = () => {
                 
                 //Filter out empty image urls before dispatching
                 const validImages = images.filter(image => image.url.trim().length > 0);
-     
+
+                //Use Promise.all to wait for all image dispatches
+                await Promise.all(spotDetails.SpotImages.map(image => dispatch(deleteExistingSpotImage(image.id))));
 
                 //Use Promise.all to wait for all image dispatches
                 await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));

@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getSpotDetails } from "../../store/spotdetail";
 import { FaStar } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
-import { useModal } from "../../context/Modal";
 import SpotReviews from "../Review/ReviewList";
-import ReviewFormModal from "../Review/ReviewForm";
 import "./SpotDetail.css";
 import { getSpotReviews } from "../../store/spotreview";
 import { restoreUser } from "../../store/session";
@@ -15,15 +13,11 @@ const SpotDetails = () => {
 
     const dispatch = useDispatch();
     const { spotId } = useParams();
-    const { setModalContent } = useModal();
     
     const spotDetails = useSelector(state => state.spotDetail[spotId]);
-    const sessionUser = useSelector(state => state.session.user); //Get the logged-in user
     const spotReviews = useSelector(state => state.spotReview);
-    const spotReviewsArray = Object.values(spotReviews);
 
-    const [userHasPostedReview, setUserHasPostedReview] = useState(false);
-    
+
     
     
     useEffect (() => {
@@ -32,15 +26,6 @@ const SpotDetails = () => {
         dispatch(restoreUser());
     }, [dispatch, spotId]);
 
-    useEffect(() => {
-        if (spotReviews && sessionUser) {
-            const userReview = spotReviewsArray.find(review => review.userId === sessionUser.id);
-            setUserHasPostedReview(!!userReview);
-        } else {
-            setUserHasPostedReview(false);
-        }
-        
-    },[spotId, spotReviews, spotReviewsArray, sessionUser])
 
     if (!spotDetails || !spotReviews){
         return;
@@ -48,10 +33,8 @@ const SpotDetails = () => {
     
     const mainImage = spotDetails.SpotImages.find(image => image.preview);
     
-    const otherImages = spotDetails.SpotImages.filter(image => !image.preview);
+    const otherImages = spotDetails.SpotImages.filter(image => !image.preview).slice(0,4);
     
-    //Check if the logged-in user has already posted a review
-    console.log("Session User:", userHasPostedReview);
 
     return (
         <div className="spotDetails-page-layout">
@@ -68,7 +51,9 @@ const SpotDetails = () => {
                     </div>
                     <div className="spotDetails-images-grid">
                         {otherImages.map(image => (
-                            <img key={image.id} src={image.url} alt={`Spot Image ${image.id}`}/>
+                            <div className="grid-item" key={image.id}>
+                                <img src={image.url} alt={`Spot Image ${image.id}`}/>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -93,17 +78,6 @@ const SpotDetails = () => {
             </div>
             <div className="divider"></div>
             <div className="spotReviews-container">
-            <span className="star-and-rating"><FaStar className="star-icon"/>{(spotDetails.avgStarRating === 0)?("New"):(spotDetails.avgStarRating)}</span>
-                            {spotDetails.numReviews === 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>}
-                            {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
-                <div>
-                    {sessionUser && (sessionUser.id !== spotDetails.ownerId) && !userHasPostedReview && (
-                        <button onClick={() => setModalContent(<ReviewFormModal spotId={spotDetails.id}/>)}>Post Your Review</button>
-                    )}
-                    {sessionUser && (sessionUser.id !== spotDetails.ownerId) && !userHasPostedReview && (spotDetails.avgStarRating === 0) && (
-                        <h4>Be the first to post a review!</h4>
-                    )}
-                </div>
                 <SpotReviews />
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllSpots } from "../../store/spot";
+import { getUserSpots } from "../../store/userspot";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
@@ -13,11 +13,12 @@ const SpotManage = () => {
     const { setModalContent } = useModal();
 
 
-    const spots = useSelector(state => state.spot);
+    const spots = useSelector(state => state.userSpotCrud);
     const spotList = Object.values(spots);
+    console.log("Spots:",spots);
 
     useEffect(() => {
-        dispatch(getAllSpots());
+        dispatch(getUserSpots());
     }, [dispatch]);
 
     if (!spots) {
@@ -38,7 +39,7 @@ const SpotManage = () => {
                             <div className="spot-info">
                                 <div className="spot-location">
                                     <span> {spot.city}, {spot.state}</span>
-                                    <span className="spot-rating"><FaStar className="star-icon"/>{spot.avgRating}</span>
+                                    <span className="spot-rating"><FaStar className="star-icon"/>{(spot.avgRating === 0)?("New"):(spot.avgRating)}</span>
                                 </div>
                                 <span className="spot-price">${spot.price}</span><span>/night</span>
                             </div>

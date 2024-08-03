@@ -1,6 +1,7 @@
 import { csrfFetch } from "./csrf";
 
 const ADD_SPOTIMAGE = "/spots/ADD_SPOTIMAGE";
+const DELETE_SPOTIMAGE = "/spots/DELETE_SPOT_IMAGE";
 
 
 //Actions
@@ -8,6 +9,13 @@ const addSpotImage = (image) => {
     return {
         type: ADD_SPOTIMAGE,
         payload: image
+    }
+};
+
+const deleteSpotImage = (imageId) => {
+    return {
+        type: DELETE_SPOTIMAGE,
+        payload: imageId
     }
 };
 
@@ -25,6 +33,19 @@ export const addNewSpotImage = (payload, spotId) => async(dispatch) => {
     }
 };
 
+export const deleteExistingSpotImage = (imageId) => async(dispatch) => {
+    const response = await csrfFetch(`/api/spot-images/${imageId}`,{
+        method: "DELETE"
+    });
+
+    if (response.ok) {
+        const deleteConfirmation = await response.json();
+        if (deleteConfirmation.message === "Successfully deleted"){
+            dispatch(deleteSpotImage(imageId));
+        }
+    }
+}
+
 
 const initialState = {};
 //Reducer
@@ -33,6 +54,11 @@ const spotImageCrudReducer = (state = initialState, action) => {
         case ADD_SPOTIMAGE: {
             const newState = {...state};
             newState[action.payload.id] = action.payload;
+            return newState;
+        }
+        case DELETE_SPOTIMAGE: {
+            const newState = {...state};
+            delete newState[action.payload];
             return newState;
         }
         default:

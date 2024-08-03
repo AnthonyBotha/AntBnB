@@ -20,6 +20,7 @@ export const getAllSpots = () => async (dispatch) => {
     }
 };
 
+
 const initialState = {};
 //Reducer
 const spotReducer = (state = initialState, action) => {

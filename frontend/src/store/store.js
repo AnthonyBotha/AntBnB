@@ -8,6 +8,7 @@ import spotCrudReducer from "./spotcrud";
 import spotImageCrudReducer from "./spotimagecrud";
 import reviewCrudReducer from "./spotreviewcrud";
 import userReviewReducer from "./userreviewcrud";
+import userSpotReducer from "./userspot";
 
 
 const rootReducer = combineReducers({
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     spotImageCrud: spotImageCrudReducer,
     spotReview: spotReviewReducer,
     reviewCrud: reviewCrudReducer,
-    userReviewCrud: userReviewReducer
+    userReviewCrud: userReviewReducer,
+    userSpotCrud: userSpotReducer
 });
 
 let enhancer;
