@@ -72,3 +72,12 @@ button:hover {
     display: flex;
 }
 
+.create-spot-container {
+    display: flex;
+    align-items: center;
+}
+
+.create-spot-container > span {
+    margin-right: 20px; /* Add some space between the text and the button */
+}
+

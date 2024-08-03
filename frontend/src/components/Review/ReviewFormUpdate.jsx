@@ -10,14 +10,12 @@ const UpdateReviewFormModal = ({reviewId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
     
-
-
     const reviewDetails = useSelector(state => state.userReviewCrud[reviewId]);
 
-    
     useEffect (() => {
-        dispatch(getUserReviews(reviewId))
-    }, [dispatch, reviewId]);
+        dispatch(getUserReviews())
+    }, [dispatch]);
+    
 
 
     const [review, setReview] = useState("");

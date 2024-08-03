@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const ADD_SPOTIMAGE = "/spots/ADD_SPOTIMAGE";
 
+
 //Actions
 const addSpotImage = (image) => {
     return {
@@ -9,6 +10,7 @@ const addSpotImage = (image) => {
         payload: image
     }
 };
+
 
 //Thunks
 export const addNewSpotImage = (payload, spotId) => async(dispatch) => {
@@ -22,6 +24,7 @@ export const addNewSpotImage = (payload, spotId) => async(dispatch) => {
         dispatch(addSpotImage(newImage));
     }
 };
+
 
 const initialState = {};
 //Reducer

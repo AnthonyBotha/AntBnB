@@ -12,6 +12,7 @@ const UserReviews = () => {
 
     const userReviews = useSelector(state => state.userReviewCrud);
     const userReviewsArray = Object.values(userReviews);
+    
 
 
     useEffect(() => {
@@ -23,8 +24,7 @@ const UserReviews = () => {
         return
     }
 
-  
-
+    
     return (
         <div>
             {userReviewsArray.map(review => (

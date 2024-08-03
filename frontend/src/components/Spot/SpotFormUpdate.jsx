@@ -5,7 +5,6 @@ import { getSpotDetails } from "../../store/spotdetail";
 import { updateExistingSpot } from "../../store/spotcrud";
 import { addNewSpotImage } from "../../store/spotimagecrud";
 
-
 const SpotFormUpdate = () => {
 
     const { spotId } = useParams();

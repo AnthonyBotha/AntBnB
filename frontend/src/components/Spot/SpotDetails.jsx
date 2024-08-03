@@ -9,6 +9,7 @@ import SpotReviews from "../Review/ReviewList";
 import ReviewFormModal from "../Review/ReviewForm";
 import "./SpotDetail.css";
 import { getSpotReviews } from "../../store/spotreview";
+import { restoreUser } from "../../store/session";
 
 const SpotDetails = () => {
 
@@ -28,15 +29,17 @@ const SpotDetails = () => {
     useEffect (() => {
         dispatch(getSpotDetails(spotId));
         dispatch(getSpotReviews(spotId));
+        dispatch(restoreUser());
     }, [dispatch, spotId]);
 
     useEffect(() => {
-        if (spotReviews) {
+        if (spotReviews && sessionUser) {
             const userReview = spotReviewsArray.find(review => review.userId === sessionUser.id);
-            if (userReview){
-                setUserHasPostedReview(true);
-            }
+            setUserHasPostedReview(!!userReview);
+        } else {
+            setUserHasPostedReview(false);
         }
+        
     },[spotId, spotReviews, spotReviewsArray, sessionUser])
 
     if (!spotDetails || !spotReviews){
@@ -69,20 +72,23 @@ const SpotDetails = () => {
                         ))}
                     </div>
                 </div>
-                <div className="spotDetails-text-content">
-                    <h3>Hosted By {spotDetails.Owner.firstName} {spotDetails.Owner.lastName}</h3>
-                    <p>{spotDetails.description}</p>
-                </div>
-                <div className="price-container">
-                    <div className="price-rating-group">
-                        <span className="price">${spotDetails.price}/night</span>
-                        <div className="rating-review-group">
-                            <span className="star-and-rating"><FaStar className="star-icon"/>{(spotDetails.avgStarRating === 0)?("New"):(spotDetails.avgStarRating)}</span>
-                            {spotDetails.numReviews === 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>}
-                            {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
-                        </div>
+                <div className="spotDetails-text-price-wrapper">
+
+                    <div className="spotDetails-text-content">
+                        <h3>Hosted By {spotDetails.Owner.firstName} {spotDetails.Owner.lastName}</h3>
+                        <p>{spotDetails.description}</p>
                     </div>
-                <button className="reserve-button" onClick={() => alert("Feature Coming Soon...")}>Reserve</button>
+                    <div className="price-container">
+                        <div className="price-rating-group">
+                            <span className="price">${spotDetails.price}/night</span>
+                            <div className="rating-review-group">
+                                <span className="star-and-rating"><FaStar className="star-icon"/>{(spotDetails.avgStarRating === 0)?("New"):(spotDetails.avgStarRating)}</span>
+                                {spotDetails.numReviews === 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} review</span>}
+                                {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
+                            </div>
+                        </div>
+                        <button className="reserve-button" onClick={() => alert("Feature Coming Soon...")}>Reserve</button>
+                    </div>
                 </div>
             </div>
             <div className="divider"></div>
@@ -93,6 +99,9 @@ const SpotDetails = () => {
                 <div>
                     {sessionUser && (sessionUser.id !== spotDetails.ownerId) && !userHasPostedReview && (
                         <button onClick={() => setModalContent(<ReviewFormModal spotId={spotDetails.id}/>)}>Post Your Review</button>
+                    )}
+                    {sessionUser && (sessionUser.id !== spotDetails.ownerId) && !userHasPostedReview && (spotDetails.avgStarRating === 0) && (
+                        <h4>Be the first to post a review!</h4>
                     )}
                 </div>
                 <SpotReviews />
