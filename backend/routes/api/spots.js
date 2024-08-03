@@ -161,15 +161,57 @@ router.get("/", validateQuery, async (req, res) => {
     const {id} = req.user;
 
     const spots = await Spot.findAll({
-        where: {ownerId: id}
+        where: {ownerId: id},
+        include: [
+            {model: SpotImage},
+            {model: Review}
+        ]
     });
 
-    if (spots){
-        return res.json({Spots:spots});
+    if (spots.length > 0){
+        const spotsWithDetails = spots.map(spot => {
+            //Extract preview image URL
+            let previewImage = spot.SpotImages.find(image => image.preview);
+
+            if (previewImage) {
+                previewImage = previewImage.url;
+            } else {
+                previewImage = "No Preview Image Available";
+            }
+
+            //Calculate average rating
+            let totalStars = 0;
+            let avgRating = 0;
+
+            if (spot.Reviews.length > 0) {
+                totalStars = spot.Reviews.reduce((sum, review) => sum + review.stars, 0);
+                avgRating = totalStars / spot.Reviews.length; 
+            }
+
+            return {
+                id: spot.id,
+                ownerId: spot.ownerId,
+                address: spot.address,
+                city: spot.city,
+                state: spot.state,
+                country: spot.country,
+                lat: spot.lat,
+                lng: spot.lng,
+                name: spot.name,
+                description: spot.description,
+                price: spot.price,
+                createdAt: spot.createdAt,
+                updatedAt: spot.updatedAt,
+                avgRating: Number((avgRating).toFixed(1)),
+                previewImage: previewImage
+            };
+        });
+
+        return res.json({Spots: spotsWithDetails});
     } else {
         return res.json({
             "message": "The current user does not own a place"
-        })
+        });
     }
     
 });

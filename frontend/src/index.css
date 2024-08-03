@@ -24,7 +24,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 0px; /*Ajust this value to move "Welcome!"*/
+    padding-top: 0px; 
     background-color: #fff;
 }
 
@@ -62,8 +62,16 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
+
+span button {
+    margin-right: 5px;
+    margin-left: 8px;
+}
+
+
 
 
 
