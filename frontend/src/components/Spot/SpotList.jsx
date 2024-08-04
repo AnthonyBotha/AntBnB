@@ -39,6 +39,19 @@ const SpotList = () => {
                     </NavLink>
                 ))}
             </div>
+            <div className="about-section">
+                <div className="about-section-one">
+                     <h4>© 2024 AntBnB,Inc.</h4>
+                </div>
+                <div className="about-section-two">
+                    <h4>Terms · SitemapPrivacy · Your Privacy Choices</h4>
+                </div>
+                <div className="about-section-three">
+                    <NavLink to="https://www.linkedin.com/in/anthony-botha-65b1a54b/">
+                        <img src="https://res.cloudinary.com/dmg8yuivs/image/upload/v1722731641/LinkedIn_pyeprg.png" alt="Linkedin-Logo"/>
+                    </NavLink>
+                </div>
+            </div>
         </div>
     )
 

@@ -112,3 +112,18 @@
     color: #333;
 
 }
+
+/* Style for the about section */
+.about-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ddd; /* Divider line */
+    margin-top: 5px;
+}
+
+/* Style for the LinkedIn logo */
+.about-section-three img {
+    width: 30px;
+    height: auto;
+}
