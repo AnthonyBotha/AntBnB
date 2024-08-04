@@ -47,9 +47,12 @@ const SpotList = () => {
                     <h4>Terms · SitemapPrivacy · Your Privacy Choices</h4>
                 </div>
                 <div className="about-section-three">
-                    <NavLink to="https://www.linkedin.com/in/anthony-botha-65b1a54b/">
-                        <img src="https://res.cloudinary.com/dmg8yuivs/image/upload/v1722731641/LinkedIn_pyeprg.png" alt="Linkedin-Logo"/>
-                    </NavLink>
+                    <span><h4>Anthony Botha</h4></span>
+                    <span>
+                        <NavLink to="https://www.linkedin.com/in/anthony-botha-65b1a54b/">
+                            <img src="https://res.cloudinary.com/dmg8yuivs/image/upload/v1722731641/LinkedIn_pyeprg.png" alt="Linkedin-Logo"/>
+                        </NavLink>
+                    </span>
                 </div>
             </div>
         </div>

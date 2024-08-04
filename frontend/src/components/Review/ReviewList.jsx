@@ -24,7 +24,7 @@ const SpotReviews = () => {
     const sessionUser = useSelector(state => state.session.user); //Get the logged-in user
     const spotDetails = useSelector(state => state.spotDetail[spotId]);
 
-    const userHasPostedReview = spotReviewsArray.find(review => review.userId === sessionUser.id);
+    const userHasPostedReview = sessionUser && spotReviewsArray.find(review => review.userId === sessionUser.id);
 
     
     useEffect(() => {
