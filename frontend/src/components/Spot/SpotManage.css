@@ -1,0 +1,16 @@
+.spot-list {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+.spot-list h1 {
+    text-align: left;
+}
+
+.create-spot-button {
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    position: absolute;
+
+}

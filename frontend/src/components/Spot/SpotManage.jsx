@@ -5,7 +5,7 @@ import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import DeleteSpotModal from "./SpotDeleteModal";
-import "./SpotList.css";
+import "./SpotManage.css";
 
 const SpotManage = () => {
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const SpotManage = () => {
     return (
         <div className="spot-list">
             <h1>Manage Your Spots</h1>
-            <button onClick={() => navigate("/spots/new")}>Create a New Spot</button>
+            <button className="create-spot-button" onClick={() => navigate("/spots/new")}>Create a New Spot</button>
             <div className="spot-grid">
                 {spotList.map(spot =>  (
                     <div key={spot.id} >
