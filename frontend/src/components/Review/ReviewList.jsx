@@ -37,6 +37,8 @@ const SpotReviews = () => {
         return
     }
 
+    const sortedSpotReviewsArray = spotReviewsArray.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
 
     return (
         <div>
@@ -57,7 +59,7 @@ const SpotReviews = () => {
                         <h4>Be the first to post a review!</h4>
                 )}
             </div>    
-            {spotReviewsArray.map(review => (
+            {sortedSpotReviewsArray.map(review => (
                 <div key={review.id} className="review-container">
                     <h3>{review.User.firstName}</h3>
                     <h4>{new Date(review.updatedAt).toLocaleDateString("en-US",{month: "long", year: "numeric"})}</h4>

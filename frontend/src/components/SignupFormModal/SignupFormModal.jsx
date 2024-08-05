@@ -37,6 +37,8 @@ function SignupFormModal() {
         return setErrors({confirmPassword: "Confirm Password field must be the same as the Password field"});
     };
 
+    const isButtonDisabled = !email || !username || username.length < 4 || password.length < 6 || password !== confirmPassword;
+
     return (
         <>
             <h1>Sign Up</h1>
@@ -101,7 +103,13 @@ function SignupFormModal() {
                     />
                 </label>
                 {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button type="submit">Sign Up</button>
+                <button 
+                    type="submit"
+                    disabled={isButtonDisabled}
+                    className={isButtonDisabled ? "disabled-button" : "enabled-button"}
+                >
+                    Sign Up
+                </button>
             </form>
         </>
     );

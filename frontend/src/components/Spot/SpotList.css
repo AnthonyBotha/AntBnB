@@ -54,9 +54,6 @@
     flex-direction: column; /* Stack the image and the info vertically */
 }
 
-.spot-item:hover .spot-tooltip {
-    visibility: visible; /* Show tooltip on hover */
-}
 
 .spot-image {
     width: 100%;
@@ -78,16 +75,22 @@
     background-color: black;
     color: #fff;
     text-align: center;
-    padding: 5px 0px;
+    padding: 5px 10px;
     border-radius: 6px;
     position: absolute;
     z-index: 1;
-    bottom: 110%; /* Position above the spot */ 
+    top: 10px; /* Position above the spot */ 
     left: 50%;
-    margin-left: -60px; /* Center the tooltip */
-    width: 120px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
 } 
 
+.spot-item:hover .spot-tooltip {
+    visibility: visible; /* Show tooltip on hover */
+    opacity: 1;
+}
 
 /* Location and rating styles */
 .spot-location {

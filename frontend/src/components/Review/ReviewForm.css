@@ -22,10 +22,14 @@
     border: 1px solid #ccc;
 }
 
+.star-rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the container horizontally */
+
+}
 .star-rating {
     display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
 }
 
 .star {
@@ -40,6 +44,10 @@
 
 .star-rating input[type="radio"] {
     display: none;
+}
+
+.stars-label {
+    margin-left: 0.5rem;
 }
 
 button {

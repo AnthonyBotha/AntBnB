@@ -97,29 +97,31 @@ const UpdateReviewFormModal = ({reviewId}) => {
                             onChange={(e) => setReview(e.target.value)}
                             placeholder="Leave your review here..."
                         />
-                        <div className="star-rating">
-                            {[...Array(5)].map((_,index) => {
-                                const ratingValue = index + 1;
-                                return (
-                                    <label key={ratingValue}>
-                                        <input 
-                                            type="radio"
-                                            name="stars"
-                                            value={ratingValue}
-                                            onChange={(e) => setStars(parseInt(e.target.value))}
-                                        />
-                                        
-                                        <FaStar 
-                                            className={`star ${ratingValue <= stars ? "filled" : ""}`}
-                                            size={40}
-                                            color={ratingValue <= stars ? "#f5b301" : "#ccc"}
-                                        />
-                            
-                                    </label>
-                                )
-                            })}
+                        <div className="star-rating-container">
+                            <div className="star-rating">
+                                {[...Array(5)].map((_,index) => {
+                                    const ratingValue = index + 1;
+                                    return (
+                                        <label key={ratingValue}>
+                                            <input 
+                                                type="radio"
+                                                name="stars"
+                                                value={ratingValue}
+                                                onChange={(e) => setStars(parseInt(e.target.value))}
+                                            />
+                                            
+                                            <FaStar 
+                                                className={`star ${ratingValue <= stars ? "filled" : ""}`}
+                                                size={40}
+                                                color={ratingValue <= stars ? "#f5b301" : "#ccc"}
+                                            />
+                                
+                                        </label>
+                                    )
+                                })}
+                            </div>
+                            <label className="stars-label">Stars</label>
                         </div>
-                    
                         <button
                             type="submit"
                             disabled={Object.keys(errors).length > 0 || review.length < 10 || stars < 1}

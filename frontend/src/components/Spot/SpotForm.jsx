@@ -167,6 +167,7 @@ const SpotForm = () => {
                     type="text"
                     name="country"
                     value={country}
+                    placeholder="Country"
                     onChange={(e) => setCountry(e.target.value)}
                 />
             </label>
@@ -177,6 +178,7 @@ const SpotForm = () => {
                     type="text"
                     name="street-address"
                     value={streetAddress}
+                    placeholder="Street Address"
                     onChange={(e) => setStreetAddress(e.target.value)}
                 />
             </label>
@@ -187,6 +189,7 @@ const SpotForm = () => {
                     type="text"
                     name="city"
                     value={city}
+                    placeholder="City"
                     onChange={(e) => setCity(e.target.value)}
                 />
             </label>
@@ -197,6 +200,7 @@ const SpotForm = () => {
                     type="text"
                     name="state"
                     value={state}
+                    placeholder="State"
                     onChange={(e) => setState(e.target.value)}
                 />
             </label>
@@ -207,6 +211,7 @@ const SpotForm = () => {
                     type="number"
                     name="latitude"
                     value={latitude}
+                    placeholder="Latitude"
                     onChange={(e) => setLatitude(e.target.value)}
                 />
             </label>
@@ -217,6 +222,7 @@ const SpotForm = () => {
                     type="number"
                     name="longitude"
                     value={longitude}
+                    placeholder="Longitude"
                     onChange={(e) => setLongitude(e.target.value)}
                 />
             </label>
@@ -229,6 +235,7 @@ const SpotForm = () => {
                     type="text"
                     name="description"
                     value={description}
+                    placeholder="Please write at least 30 characters"
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </label>
@@ -241,6 +248,7 @@ const SpotForm = () => {
                     type="text"
                     name="name"
                     value={name}
+                    placeholder="Name of your spot"
                     onChange={(e) => setName(e.target.value)}
                 />
             </label>
@@ -253,6 +261,7 @@ const SpotForm = () => {
                     type="number"
                     name="price"
                     value={price}
+                    placeholder="Price per night (USD)"
                     onChange={(e) => setPrice(e.target.value)}
                 />
             </label>
@@ -265,6 +274,7 @@ const SpotForm = () => {
                     type="text"
                     name="preview-image"
                     value={previewImageUrl}
+                    placeholder="Preview Image URL"
                     onChange={(e) => setPreviewImageUrl(e.target.value)}
                 />
             </label>
@@ -275,6 +285,7 @@ const SpotForm = () => {
                     type="text"
                     name="image-one"
                     value={imageOneUrl}
+                    placeholder="Image URL"
                     onChange={(e) => setImageOneUrl(e.target.value)}
                 />
             </label>
@@ -285,6 +296,7 @@ const SpotForm = () => {
                     type="text"
                     name="image-two"
                     value={imageTwoUrl}
+                    placeholder="Image URL"
                     onChange={(e) => setImageTwoUrl(e.target.value)}
                 />
             </label>
@@ -295,6 +307,7 @@ const SpotForm = () => {
                     type="text"
                     name="image-three"
                     value={imageThreeUrl}
+                    placeholder="Image URL"
                     onChange={(e) => setImageThreeUrl(e.target.value)}
                 />
             </label>
@@ -305,12 +318,14 @@ const SpotForm = () => {
                     type="text"
                     name="image-four"
                     value={imageFourUrl}
+                    placeholder="Image URL"
                     onChange={(e) => setImageFourUrl(e.target.value)}
                 />
             </label>
             <button
                 type="submit"
                 disabled={Object.keys(errors).length > 0}
+                className={Object.keys(errors).length > 0 ? "disabled-button" : "enabled-button"}
             >
                 Create Spot
             </button>

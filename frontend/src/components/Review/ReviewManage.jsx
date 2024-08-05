@@ -13,8 +13,6 @@ const UserReviews = () => {
     const userReviews = useSelector(state => state.userReviewCrud);
     const userReviewsArray = Object.values(userReviews);
     
-
-
     useEffect(() => {
         dispatch(getUserReviews())
     }, [dispatch])
@@ -24,10 +22,12 @@ const UserReviews = () => {
         return
     }
 
+    const sortedUserReviewsArray = userReviewsArray.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
     
     return (
         <div>
-            {userReviewsArray.map(review => (
+            {sortedUserReviewsArray.map(review => (
                 <div key={review.id} className="review-container">
                     <h3>{review.Spot.name}</h3>
                     <h4>{new Date(review.updatedAt).toLocaleDateString("en-US",{month: "long", year: "numeric"})}</h4>
