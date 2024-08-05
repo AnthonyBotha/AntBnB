@@ -16,7 +16,6 @@ const SpotManage = () => {
 
     const spots = useSelector(state => state.userSpotCrud);
     const spotList = Object.values(spots);
-    console.log("Spots:",spots);
 
     useEffect(() => {
         dispatch(getUserSpots());

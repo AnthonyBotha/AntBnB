@@ -124,7 +124,6 @@ const SpotForm = () => {
                 
                 //Filter out empty image urls before dispatching
                 const validImages = images.filter(image => image.url.trim().length > 0);
-                console.log("validImages:", validImages);
 
                 //Use Promise.all to wait for all image dispatches
                 await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));
