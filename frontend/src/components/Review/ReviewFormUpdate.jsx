@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserReviews } from "../../store/userreviewcrud";
-import { updateExistingReview } from "../../store/spotreviewcrud";
+import { getUserReviews } from "../../store/review";
+import { updateExistingReview } from "../../store/review";
 import { FaStar } from "react-icons/fa";
 import { useModal } from "../../context/Modal";
 import "./ReviewForm.css"
 
-const UpdateReviewFormModal = ({reviewId}) => {
+const UpdateReviewFormModal = ({reviewId, spotId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
     
-    const reviews = useSelector(state => state.userReviewCrud);
-
+    const reviews = useSelector(state => state.review.userReviews);
+    
     const reviewDetails = reviews[reviewId];
+
 
     useEffect (() => {
         dispatch(getUserReviews())
@@ -60,7 +61,7 @@ const UpdateReviewFormModal = ({reviewId}) => {
                 stars
             }
         
-            const updatedReview = await dispatch(updateExistingReview(reviewId, reviewFormValues));
+            const updatedReview = await dispatch(updateExistingReview(reviewId, reviewFormValues, spotId));
             
             if (updatedReview){
                 setMessage("Review Successfully Updated.");

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getSpotDetails } from "../../store/spotdetail";
+import { getSpotDetails } from "../../store/spot";
 import { FaStar } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
 import SpotReviews from "../Review/ReviewList";
 import "./SpotDetail.css";
-import { getSpotReviews } from "../../store/spotreview";
+import { getSpotReviews } from "../../store/review";
 import { restoreUser } from "../../store/session";
 
 const SpotDetails = () => {
@@ -14,11 +14,9 @@ const SpotDetails = () => {
     const dispatch = useDispatch();
     const { spotId } = useParams();
     
-    const spotDetails = useSelector(state => state.spotDetail[spotId]);
-    const spotReviews = useSelector(state => state.spotReview);
+    const spotDetails = useSelector(state => state.spot.spotDetails[spotId]);
+    const spotReviews = useSelector(state => state.review.spotReviews);
 
-
-    
     
     useEffect (() => {
         dispatch(getSpotDetails(spotId));
@@ -50,8 +48,8 @@ const SpotDetails = () => {
                         />
                     </div>
                     <div className="spotDetails-images-grid">
-                        {otherImages.map(image => (
-                            <div className="grid-item" key={image.id}>
+                        {otherImages.map((image, index) => (
+                            <div className="grid-item" key={image.id || index}>
                                 <img src={image.url} alt={`Spot Image ${image.id}`}/>
                             </div>
                         ))}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteExistingSpot } from "../../store/spotcrud";
+import { deleteExistingSpot } from "../../store/spot";
 import { useModal } from "../../context/Modal";
 import "./SpotDeleteModal.css"
 

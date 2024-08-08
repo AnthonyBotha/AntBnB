@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getSpotReviews } from "../../store/spotreview";
-import { getUserReviews } from "../../store/userreviewcrud";
+import { getSpotReviews } from "../../store/review";
+import { getUserReviews } from "../../store/review";
+import { getSpotDetails } from "../../store/spot";
 import { FaStar } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
 import { useModal } from "../../context/Modal";
@@ -17,19 +18,23 @@ const SpotReviews = () => {
     const dispatch = useDispatch();
     const { setModalContent } = useModal();
 
-    const allSpotReviews = useSelector(state => state.spotReview);
+    const allSpotReviews = useSelector(state => state.review.spotReviews);
     const allSpotReviewsArray = Object.values(allSpotReviews);
     const spotReviewsArray = allSpotReviewsArray.filter(review => review.spotId === parseInt(spotId));
 
     const sessionUser = useSelector(state => state.session.user); //Get the logged-in user
-    const spotDetails = useSelector(state => state.spotDetail[spotId]);
+    const spotDetails = useSelector(state => state.spot.spotDetails[spotId]);
 
     const userHasPostedReview = sessionUser && spotReviewsArray.find(review => review.userId === sessionUser.id);
+
+    console.log("All Spot Reviews:", allSpotReviews);
+    console.log("Spots Review Array:", allSpotReviewsArray);
 
     
     useEffect(() => {
         dispatch(getSpotReviews(parseInt(spotId)))
-        dispatch(getUserReviews());
+        dispatch(getSpotDetails(spotId))
+        dispatch(getUserReviews())
     }, [dispatch, spotId]);
 
 
@@ -39,7 +44,7 @@ const SpotReviews = () => {
 
     const sortedSpotReviewsArray = spotReviewsArray.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-
+    console.log("sorted Spots Review Array:", sortedSpotReviewsArray)
     return (
         <div>
             <div>
@@ -66,8 +71,8 @@ const SpotReviews = () => {
                     <p>{review.review}</p>
                     {sessionUser && (sessionUser.id === review.userId) && (sessionUser.id !== spotDetails.Owner.id) && (
                         <>
-                            <span><button onClick={() => setModalContent(<UpdateReviewFormModal reviewId={review.id} />)}>Update</button></span>
-                            <span><button onClick={() => setModalContent(<DeleteReviewModal reviewId={review.id} />)}>Delete</button></span>
+                            <span><button onClick={() => setModalContent(<UpdateReviewFormModal reviewId={review.id} spotId={review.spotId}/>)}>Update</button></span>
+                            <span><button onClick={() => setModalContent(<DeleteReviewModal reviewId={review.id} spotId={review.spotId}/>)}>Delete</button></span>
                         </>
                     )}
                 </div>

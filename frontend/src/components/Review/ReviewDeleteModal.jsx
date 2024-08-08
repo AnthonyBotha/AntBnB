@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteExistingReview } from "../../store/userreviewcrud";
-import { getUserReviews } from "../../store/userreviewcrud";
+import { deleteExistingReview } from "../../store/review";
+import { getUserReviews } from "../../store/review";
 import { useModal } from "../../context/Modal";
 
-const DeleteReviewModal = ({reviewId}) => {
+const DeleteReviewModal = ({reviewId, spotId}) => {
     const dispatch = useDispatch();
     const {closeModal} = useModal();
     const [message, setMessage] = useState("");
 
     const handleDelete = async () => {
-        const result = await dispatch(deleteExistingReview(reviewId));
+        const result = await dispatch(deleteExistingReview(reviewId, spotId));
 
         if (result){
             setMessage("Review Successfully Deleted.");

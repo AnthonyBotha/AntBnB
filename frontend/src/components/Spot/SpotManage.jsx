@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserSpots } from "../../store/userspot";
+import { getUserSpots } from "../../store/spot";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useModal } from "../../context/Modal";
@@ -14,7 +14,7 @@ const SpotManage = () => {
     const { setModalContent } = useModal();
 
 
-    const spots = useSelector(state => state.userSpotCrud);
+    const spots = useSelector(state => state.spot.userSpots);
     const spotList = Object.values(spots);
 
     useEffect(() => {

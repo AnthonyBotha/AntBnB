@@ -1,40 +1,40 @@
-import { csrfFetch } from "./csrf";
+// import { csrfFetch } from "./csrf";
 
-const LOAD_SPOTDETAILS = "/spots/LOAD_SPOTDETAILS";
+// const LOAD_SPOTDETAILS = "/spots/LOAD_SPOTDETAILS";
 
-//Actions
-const loadSpotDetails = (spotdetails) => {
-    return {
-        type: LOAD_SPOTDETAILS,
-        payload: spotdetails
-    }
-};
+// //Actions
+// const loadSpotDetails = (spotdetails) => {
+//     return {
+//         type: LOAD_SPOTDETAILS,
+//         payload: spotdetails
+//     }
+// };
 
-//Thunks
-export const getSpotDetails = (spotId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}`);
+// //Thunks
+// export const getSpotDetails = (spotId) => async (dispatch) => {
+//     const response = await csrfFetch(`/api/spots/${spotId}`);
 
-    if (response.ok) {
-        const spotDetails = await response.json();
-        dispatch(loadSpotDetails(spotDetails));
-        return spotDetails;
-    }
-};
+//     if (response.ok) {
+//         const spotDetails = await response.json();
+//         dispatch(loadSpotDetails(spotDetails));
+//         return spotDetails;
+//     }
+// };
 
-const initialState = {};
-//Reducer
-const spotDetailReducer = (state = initialState, action) => {
+// const initialState = {};
+// //Reducer
+// const spotDetailReducer = (state = initialState, action) => {
 
-    switch(action.type) {
+//     switch(action.type) {
 
-        case LOAD_SPOTDETAILS: {
-            const newState = {...state};
-            newState[action.payload.id] = action.payload;
-            return newState;
-        }
-        default:
-            return state;
-    }
-}
+//         case LOAD_SPOTDETAILS: {
+//             const newState = {...state};
+//             newState[action.payload.id] = action.payload;
+//             return newState;
+//         }
+//         default:
+//             return state;
+//     }
+// }
 
-export default spotDetailReducer;
+// export default spotDetailReducer;

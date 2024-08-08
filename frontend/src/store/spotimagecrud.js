@@ -49,7 +49,7 @@ export const deleteExistingSpotImage = (imageId) => async(dispatch) => {
 
 const initialState = {};
 //Reducer
-const spotImageCrudReducer = (state = initialState, action) => {
+const spotImageReducer = (state = initialState, action) => {
     switch(action.type) {
         case ADD_SPOTIMAGE: {
             const newState = {...state};
@@ -66,4 +66,4 @@ const spotImageCrudReducer = (state = initialState, action) => {
     }
 }
 
-export default spotImageCrudReducer;
+export default spotImageReducer;

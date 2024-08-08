@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createNewSpot } from "../../store/spotcrud";
-import { addNewSpotImage } from "../../store/spotimagecrud";
+import { createNewSpotWithImages } from "../../store/spot";
 
 const SpotForm = () => {
     const [country, setCountry] = useState("");
@@ -109,47 +108,42 @@ const SpotForm = () => {
                 name:name,
                 price:price
             }
-
-            const newSpot = await dispatch(createNewSpot(spotFormValues));
-
-
-            if (newSpot) {
-                const images = [
-                    {url: previewImageUrl, preview: true},
-                    {url: imageOneUrl, preview: false},
-                    {url: imageTwoUrl, preview: false},
-                    {url: imageThreeUrl, preview: false},
-                    {url: imageFourUrl, preview: false}
-                ]
+            
+            const images = [
+                {url: previewImageUrl, preview: true},
+                {url: imageOneUrl, preview: false},
+                {url: imageTwoUrl, preview: false},
+                {url: imageThreeUrl, preview: false},
+                {url: imageFourUrl, preview: false}
+            ]
                 
-                //Filter out empty image urls before dispatching
-                const validImages = images.filter(image => image.url.trim().length > 0);
+            //Filter out empty image urls before dispatching
+            const validImages = images.filter(image => image.url.trim().length > 0);
+            
+            const newSpot = await dispatch(createNewSpotWithImages(spotFormValues, validImages));
+                
+            //Clear form inputs after successful submission
+            setCountry("");
+            setStreetAddress("");
+            setCity("");
+            setState("");
+            setLatitude("");
+            setLongitude("");
+            setDescription("");
+            setName("");
+            setPrice("");
+            setPreviewImageUrl("");
+            setImageOneUrl("");
+            setImageTwoUrl("");
+            setImageThreeUrl("");
+            setImageFourUrl("");
 
-                //Use Promise.all to wait for all image dispatches
-                await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));
-
-                //Clear form inputs after successful submission
-                setCountry("");
-                setStreetAddress("");
-                setCity("");
-                setState("");
-                setLatitude("");
-                setLongitude("");
-                setDescription("");
-                setName("");
-                setPrice("");
-                setPreviewImageUrl("");
-                setImageOneUrl("");
-                setImageTwoUrl("");
-                setImageThreeUrl("");
-                setImageFourUrl("");
-
-                //Navigate to newly created spot details page
-                navigate(`/spots/${newSpot.id}`);
-            }
-
+            //Navigate to newly created spot details page
+            navigate(`/spots/${newSpot.id}`);
         }
+
     }
+
 
     return (
         <form

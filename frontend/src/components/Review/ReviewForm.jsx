@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { createNewReview } from "../../store/spotreviewcrud";
-import { getSpotReviews } from "../../store/spotreview";
+import { createNewReview } from "../../store/review";
+import { getSpotReviews } from "../../store/review";
 import { FaStar } from "react-icons/fa";
 import { useModal } from "../../context/Modal";
 import "./ReviewForm.css"

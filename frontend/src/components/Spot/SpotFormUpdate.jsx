@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSpotDetails } from "../../store/spotdetail";
-import { updateExistingSpot } from "../../store/spotcrud";
-import { addNewSpotImage } from "../../store/spotimagecrud";
-import { deleteExistingSpotImage } from "../../store/spotimagecrud";
+import { getSpotDetails } from "../../store/spot";
+import { updateExistingSpot } from "../../store/spot";
+// import { addNewSpotImage } from "../../store/spotimagecrud";
+// import { deleteExistingSpotImage } from "../../store/spotimagecrud";
 
 const SpotFormUpdate = () => {
 
@@ -12,7 +12,7 @@ const SpotFormUpdate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    const spotDetails = useSelector(state => state.spotDetail[spotId]);
+    const spotDetails = useSelector(state => state.spot.spotDetails[spotId]);
     
     useEffect (() => {
         dispatch(getSpotDetails(spotId))
@@ -168,49 +168,47 @@ const SpotFormUpdate = () => {
                 price:price
             }
 
-            const newSpot = await dispatch(updateExistingSpot(spotFormValues, spotId));
-
-
-            if (newSpot) {
-                const images = [
-                    {url: previewImageUrl, preview: true},
-                    {url: imageOneUrl, preview: false},
-                    {url: imageTwoUrl, preview: false},
-                    {url: imageThreeUrl, preview: false},
-                    {url: imageFourUrl, preview: false}
-                ]
+            
+            const images = [
+                {url: previewImageUrl, preview: true},
+                {url: imageOneUrl, preview: false},
+                {url: imageTwoUrl, preview: false},
+                {url: imageThreeUrl, preview: false},
+                {url: imageFourUrl, preview: false}
+            ]
                 
-                //Filter out empty image urls before dispatching
-                const validImages = images.filter(image => image.url.trim().length > 0);
+            //Filter out empty image urls before dispatching
+            const validImages = images.filter(image => image.url.trim().length > 0);
+                
+            await dispatch(updateExistingSpot(spotId, spotFormValues, spotDetails.SpotImages,validImages));
 
-                //Use Promise.all to wait for all image dispatches
-                await Promise.all(spotDetails.SpotImages.map(image => dispatch(deleteExistingSpotImage(image.id))));
+            // //Use Promise.all to wait for all image dispatches
+            // await Promise.all(spotDetails.SpotImages.map(image => dispatch(deleteExistingSpotImage(image.id))));
+                
+            // //Use Promise.all to wait for all image dispatches
+            // await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));
 
-                //Use Promise.all to wait for all image dispatches
-                await Promise.all(validImages.map(image => dispatch(addNewSpotImage(image, newSpot.id))));
+            //Clear form inputs after successful submission
+            setCountry("");
+            setStreetAddress("");
+            setCity("");
+            setState("");
+            setLatitude("");
+            setLongitude("");
+            setDescription("");
+            setName("");
+            setPrice("");
+            setPreviewImageUrl("");
+            setImageOneUrl("");
+            setImageTwoUrl("");
+            setImageThreeUrl("");
+            setImageFourUrl("");
 
-                //Clear form inputs after successful submission
-                setCountry("");
-                setStreetAddress("");
-                setCity("");
-                setState("");
-                setLatitude("");
-                setLongitude("");
-                setDescription("");
-                setName("");
-                setPrice("");
-                setPreviewImageUrl("");
-                setImageOneUrl("");
-                setImageTwoUrl("");
-                setImageThreeUrl("");
-                setImageFourUrl("");
-
-                //Navigate to newly created spot details page
-                navigate(`/spots/${newSpot.id}`);
+            //Navigate to the updated spot details page
+            navigate(`/spots/${spotId}`);
             }
 
         }
-    }
 
     return (
         <form
