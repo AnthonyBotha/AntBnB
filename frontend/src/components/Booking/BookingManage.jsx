@@ -219,7 +219,7 @@ const BookingManage = () => {
                                         </div>
                                     </NavLink>
                                     <div className="booking-actions">
-                                        <span><button className="small-button" onClick={() => setModalContent(<BookingUpdateModal bookingId={booking.id} />)}>Update</button></span>
+                                        <span><button className="small-button" onClick={() => setModalContent(<BookingUpdateModal bookingId={booking.id} spotId={booking.spotId} />)}>Update</button></span>
                                         <span><button className="small-button" onClick={() => setModalContent(<DeleteBookingModal bookingId={booking.id} />)}>Delete</button></span>
                                     </div>
 

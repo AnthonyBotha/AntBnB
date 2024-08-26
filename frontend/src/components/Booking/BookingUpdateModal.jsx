@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
-import { getUserBookings, updateExistingBooking } from "../../store/booking";
+import { getSpotBookings, updateExistingBooking } from "../../store/booking";
 import "./BookingModal.css"
 
 
-function BookingUpdateModal({bookingId}) {
+function BookingUpdateModal({bookingId, spotId}) {
     const dispatch = useDispatch();
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
@@ -15,14 +15,12 @@ function BookingUpdateModal({bookingId}) {
     const [bookedDates, setBookedDates] = useState([]);
     const { closeModal } = useModal();
 
-    const bookings = useSelector(state => state.booking.userBookings);
+    const bookings = useSelector(state => state.booking.spotBookings);
     
     useEffect(() => {
         //Fetch booked dates and update state
-        if (!bookings){
-            dispatch(getUserBookings());
-        }
-    },[dispatch, bookings]);
+            dispatch(getSpotBookings(spotId));
+    },[dispatch, spotId]);
 
     useEffect(() => {
         if (bookings && bookingId){
@@ -44,7 +42,7 @@ function BookingUpdateModal({bookingId}) {
             //Update bookedDates when bookings change
             const bookingsCopy = {...bookings};
             delete bookingsCopy[bookingId];
-            const bookingsArray = Object.values(bookingsCopy);
+            const bookingsArray = Object.values(bookingsCopy).filter(booking => booking.spotId === spotId);
           
 
             const dates = bookingsArray.flatMap(booking => {
@@ -55,14 +53,10 @@ function BookingUpdateModal({bookingId}) {
 
                 let currentDate = new Date(start);
 
-                // Adjust for timezones by setting the time to midnight
-                currentDate.setHours(0,0,0,0);
+                // Start from the day after the start date
+                currentDate.setDate(currentDate.getDate() + 1);
 
-                // Shift dates by 1 day
-                start.setDate(start.getDate() + 1);
-                end.setDate(end.getDate() + 1);
-
-
+                // Add the date range to the array
                 while (currentDate <= end){
                     rangeDates.push({
                         date: new Date(currentDate)
@@ -71,13 +65,18 @@ function BookingUpdateModal({bookingId}) {
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
 
+                //Include the day after the end date
+                const dayAfterEnd = new Date(end);
+                dayAfterEnd.setDate(dayAfterEnd.getDate() + 1);
+                rangeDates.push({ date:dayAfterEnd });
+
                 return rangeDates;
 
             });
 
             setBookedDates(dates);
         }
-    },[dispatch, bookingId, bookings, startDate, endDate]);
+    },[dispatch, bookingId, bookings, spotId]);
 
     const handleDateChange = (dates) => {
         const [start, end] = dates;
