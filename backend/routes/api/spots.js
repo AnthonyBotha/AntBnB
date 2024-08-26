@@ -6,7 +6,7 @@ const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 
 const { handleValidationErrors } = require('../../utils/validation');
-const booking = require('../../db/models/booking');
+
 
 const router = express.Router();
 
@@ -103,21 +103,29 @@ router.get("/", validateQuery, async (req, res) => {
         limit: size,
         offset: (page - 1) * size,
         include: [
-            {model: SpotImage},
-            {model: Review}
+            {
+                model: SpotImage,
+                where: {preview: true},
+                required: false
+            },
+            {
+                model: Review
+            },
+            {
+                model : User,
+                as : "Owner",
+                attributes: ["firstName"]
+
+            }
         ]
     });
 
 
     const spotsWithDetails = spots.map(spot => {
         //Extract preview image URL
-        let previewImage = spot.SpotImages.find(image => image.preview);
+        let previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url: "No Preview Image Available";
         
-        if (previewImage){
-            previewImage = previewImage.url;
-        } else {
-            previewImage = "No Preview Image Available";
-        }
+
 
         //Calculate average rating
         let totalStars = 0;
@@ -131,6 +139,7 @@ router.get("/", validateQuery, async (req, res) => {
         return {
             id: spot.id,
             ownerId: spot.ownerId,
+            ownerFirstName: spot.Owner.firstName,
             address: spot.address,
             city: spot.city,
             state: spot.state,
@@ -479,17 +488,28 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
     const bookings = await Booking.findAll({
         where: {spotId: spotId},
         include: [
-            {model: Spot},
+            {
+                model: Spot,
+                attributes:["price", "city"],
+                include: [{
+                    model: SpotImage,
+                    where: {preview: true},
+                    attributes: ["url"],
+                    required: false
+                }]
+            },
             {model: User}
         ]
     });
 
     if (bookings && bookings.length > 0){
         const formattedBookings = bookings.map(booking => {
-            const spot = booking.Spot;
+            // const spot = booking.Spot;
             const user = booking.User;
+            const spot = booking.Spot;
+            const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
 
-            if (id === spot.ownerId) {
+            // if (id === spot.ownerId) {
                 return {
                     User: {
                         id: user.id,
@@ -502,15 +522,19 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
                     startDate: booking.startDate,
                     endDate: booking.endDate,
                     createdAt: booking.createdAt,
-                    updatedAt: booking.updatedAt
+                    updatedAt: booking.updatedAt,
+                    previewImage: previewImage,
+                    price: spot.price,
+                    city: spot.city
                 }
-            } else {
-                return {
-                    spotId: booking.spotId,
-                    startDate: booking.startDate,
-                    endDate: booking.endDate
-                }
-            }
+            // } else {
+            //     return {
+            //         id: booking.id,
+            //         spotId: booking.spotId,
+            //         startDate: booking.startDate,
+            //         endDate: booking.endDate
+            //     }
+            // }
         });
         res.json({Bookings: formattedBookings});
     } else {

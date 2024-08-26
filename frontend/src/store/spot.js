@@ -173,6 +173,7 @@ export const getUserSpots = () => async (dispatch) => {
     const response = await csrfFetch("/api/spots/current");
 
     if (response.ok) {
+        console.log("Thunk is working....")
         const userList = await response.json();
         dispatch(loadUserSpots(userList));
     }

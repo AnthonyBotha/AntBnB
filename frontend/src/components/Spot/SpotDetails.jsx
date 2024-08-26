@@ -8,11 +8,14 @@ import SpotReviews from "../Review/ReviewList";
 import "./SpotDetail.css";
 import { getSpotReviews } from "../../store/review";
 import { restoreUser } from "../../store/session";
+import { useModal } from "../../context/Modal";
+import BookingModal from "../Booking/BookingModal";
 
 const SpotDetails = () => {
 
     const dispatch = useDispatch();
     const { spotId } = useParams();
+    const { setModalContent } = useModal()
     
     const spotDetails = useSelector(state => state.spot.spotDetails[spotId]);
     const spotReviews = useSelector(state => state.review.spotReviews);
@@ -70,7 +73,7 @@ const SpotDetails = () => {
                                 {spotDetails.numReviews > 1 && <span><LuDot className="dot"/>{spotDetails.numReviews} reviews</span>}
                             </div>
                         </div>
-                        <button className="reserve-button" onClick={() => alert("Feature Coming Soon...")}>Reserve</button>
+                        <button className="reserve-button" onClick={() => setModalContent(<BookingModal spotId={spotId}/>)}>Reserve</button>
                     </div>
                 </div>
             </div>

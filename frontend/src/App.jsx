@@ -8,6 +8,7 @@ import SpotForm from "./components/Spot/SpotForm";
 import SpotManage from "./components/Spot/SpotManage";
 import SpotFormUpdate from "./components/Spot/SpotFormUpdate";
 import UserReviews from "./components/Review/ReviewManage";
+import BookingManage from "./components/Booking/BookingManage";
 import * as sessionActions from "./store/session";
 
 function Layout() {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path:"/reviews/current",
         element: <UserReviews />
+      },
+      {
+        path:"/bookings/current",
+        element: <BookingManage />
       },
       {
         path: "*",

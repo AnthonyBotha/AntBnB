@@ -1,6 +1,6 @@
 const express = require('express');
 const {Op} = require("sequelize");
-const { Booking, Spot, SpotImage} = require('../../db/models');
+const { Booking, Spot, SpotImage, User} = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
@@ -9,26 +9,31 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
-//Get all of the Current User's Bookings
-router.get("/current", requireAuth, async (req, res) => {
-    const {id} = req.user;
+//Get all of the bookings
+router.get("/", async (req, res) => {
 
     const bookings = await Booking.findAll({
-        where: {userId: id},
         include: [{
             model: Spot, 
             attributes: ["id", "ownerId", "address", "city", "state", "country", "lat", "lng", "name", "price"],
-            include: [{
-                model: SpotImage,
-                attributes: ["url", "preview"]
-            }]
+            include: [
+                {
+                    model: SpotImage,
+                    attributes: ["url", "preview"]
+                },
+                {
+                    model: User,
+                    as: "Owner",
+                    attributes: ["id","firstName","lastName"]
+                }
+            ]
         }]
     });
 
     //Format the output
     const formattedBookings = bookings.map(booking => {
         const spot = booking.Spot;
-        let previewImage = spot.SpotImage && spot.SpotImage.find(image => image.preview);
+        let previewImage = spot.SpotImages && spot.SpotImages.find(image => image.preview);
 
         if (previewImage){
             previewImage = previewImage.url;
@@ -42,6 +47,78 @@ router.get("/current", requireAuth, async (req, res) => {
             Spot: {
                 id: spot.id,
                 ownerId: spot.ownerId,
+                ownerFirstName: spot.Owner.firstName,
+                address: spot.address,
+                city: spot.city,
+                state: spot.state,
+                country: spot.country,
+                lat: Number(spot.lat),
+                lng: Number(spot.lng),
+                name: spot.name,
+                price: Number(spot.price),
+                previewImage: previewImage
+            },
+            User: {
+                id: spot.Owner.id,
+                firstName: spot.Owner.firstName,
+                lastName: spot.Owner.lastName
+            },
+            startDate: booking.startDate,
+            endDate: booking.endDate,
+            createdAt: booking.createdAt,
+            updatedAt: booking.updatedAt
+        };
+    });
+
+    res.json({Bookings: formattedBookings});
+
+});
+
+
+
+//Get all of the Current User's Bookings
+router.get("/current", requireAuth, async (req, res) => {
+    const {id} = req.user;
+
+    const bookings = await Booking.findAll({
+        where: {userId: id},
+        include: [{
+            model: Spot, 
+            attributes: ["id", "ownerId", "address", "city", "state", "country", "lat", "lng", "name", "price"],
+            include: [
+                {
+                    model: SpotImage,
+                    attributes: ["url", "preview"]
+                },
+                {
+                    model: User,
+                    as: "Owner",
+                    attributes: ["firstName"]
+
+
+                }
+            ]
+        }]
+    });
+
+    //Format the output
+    const formattedBookings = bookings.map(booking => {
+        const spot = booking.Spot;
+        let previewImage = spot.SpotImages && spot.SpotImages.find(image => image.preview);
+
+        if (previewImage){
+            previewImage = previewImage.url;
+        } else {
+            previewImage = "No Preview Image Available";
+        }
+
+        return {
+            id: booking.id,
+            spotId: booking.spotId,
+            Spot: {
+                id: spot.id,
+                ownerId: spot.ownerId,
+                ownerFirstName: spot.Owner.firstName,
                 address: spot.address,
                 city: spot.city,
                 state: spot.state,
@@ -143,13 +220,15 @@ const checkBookingConflict = async (req, res, next) => {
 
 
 //Edit a Booking 
-router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, async (req, res) => {
+router.put("/:bookingId", requireAuth, validateBooking, async (req, res) => {
     const {id} = req.user;
     const {bookingId} = req.params;
     const {startDate, endDate} = req.body;
     const currentDate = new Date();
 
-    if (endDate < currentDate) {
+    console.log("it works!")
+
+    if (new Date(endDate) < currentDate) {
         res.status(403);
         return res.json({
             "message": "Past bookings can't be modified"
@@ -158,6 +237,8 @@ router.put("/:bookingId", requireAuth, validateBooking, checkBookingConflict, as
 
 
     const bookingToUpdate = await Booking.findByPk(bookingId);
+
+    console.log('bookingToUpdate:', bookingToUpdate);
 
     if (bookingToUpdate) {
         if (id === bookingToUpdate.userId){
